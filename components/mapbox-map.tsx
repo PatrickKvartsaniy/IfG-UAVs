@@ -59,14 +59,13 @@ export default function MapboxMap({ selectedSpecies, allSpecies }: MapProps) {
 
       const mapboxgl = (window as any).mapboxgl
 
-      // Set access token - using the environment variable you have available
       mapboxgl.accessToken =
-        process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "pk.eyJ1IjoidGVzdCIsImEiOiJjbGV4YW1wbGUifQ.example"
+        process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
 
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/satellite-streets-v12",
-        center: [19.8335, 45.2671],
+        center: [7.628, 51.988],
         zoom: 14,
       })
 
@@ -245,7 +244,7 @@ export default function MapboxMap({ selectedSpecies, allSpecies }: MapProps) {
 
       // Reset view to show all species
       map.current.flyTo({
-        center: [19.8335, 45.2671],
+        center: [7.628, 51.988],
         zoom: 14,
         duration: 1000,
       })

@@ -37,11 +37,11 @@ const menuItems = [
     url: "/analytics",
     icon: BarChart3,
   },
-  {
-    title: "Admin",
-    url: "/admin",
-    icon: Settings,
-  },
+  // {
+  //   title: "Admin",
+  //   url: "/admin",
+  //   icon: Settings,
+  // },
 ]
 
 export function AppSidebar() {
