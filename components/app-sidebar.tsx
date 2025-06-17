@@ -1,0 +1,82 @@
+"use client"
+
+import { BarChart3, BookOpen, Map, Settings, Shield, Home } from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar"
+
+const menuItems = [
+  {
+    title: "Dashboard",
+    url: "/",
+    icon: Home,
+  },
+  {
+    title: "Wildlife Wiki",
+    url: "/wiki",
+    icon: BookOpen,
+  },
+  {
+    title: "Story Maps",
+    url: "/story-maps",
+    icon: Map,
+  },
+  {
+    title: "Analytics",
+    url: "/analytics",
+    icon: BarChart3,
+  },
+  {
+    title: "Admin",
+    url: "/admin",
+    icon: Settings,
+  },
+]
+
+export function AppSidebar() {
+  const pathname = usePathname()
+
+  return (
+    <Sidebar>
+      <SidebarHeader className="border-b border-sidebar-border">
+        <div className="flex items-center gap-2 px-2 py-2">
+          <Shield className="h-6 w-6 text-green-600" />
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold">UAV Study Platform</span>
+            <span className="text-xs text-muted-foreground">Protected Area Research</span>
+          </div>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  )
+}
