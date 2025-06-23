@@ -1,6 +1,6 @@
 "use client"
 
-import { BarChart3, BookOpen, Map, Settings, Shield, Home } from "lucide-react"
+import { BarChart3, BookOpen, Map, Settings, Shield, Home, Plane } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -18,9 +18,14 @@ import {
 
 const menuItems = [
   {
-    title: "Dashboard",
+    title: "Home",
     url: "/",
     icon: Home,
+  },
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: BarChart3,
   },
   {
     title: "Wildlife Wiki",
@@ -32,16 +37,6 @@ const menuItems = [
     url: "/story-maps",
     icon: Map,
   },
-  {
-    title: "Analytics",
-    url: "/analytics",
-    icon: BarChart3,
-  },
-  // {
-  //   title: "Admin",
-  //   url: "/admin",
-  //   icon: Settings,
-  // },
 ]
 
 export function AppSidebar() {

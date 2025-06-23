@@ -11,7 +11,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "UAV Protected Area Study",
   description: "Environmental monitoring and research platform",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({
