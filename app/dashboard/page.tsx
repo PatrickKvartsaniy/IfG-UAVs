@@ -5,28 +5,28 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { MapPin, Plane, TreePine, Fish, Bird, RefreshCw, Download, Thermometer } from "lucide-react"
+import { MapPin } from "lucide-react"
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
-  AreaChart,
-  Area,
 } from "recharts"
 import dynamic from 'next/dynamic'
-import LeafletMap, { LeafletMapRef } from '@/components/LeafletMap'
 
 const LiveWeather = dynamic(() => import('@/components/LiveWeather'), { 
   ssr: false,
   loading: () => <div className="h-20 bg-gray-100 animate-pulse rounded" />
 })
+
+const LeafletMap = dynamic(() => import('@/components/LeafletMap'), {
+  ssr: false,
+  loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />
+});
+
+interface LeafletMapRef {
+  openPopup: (objectId: number) => void;
+}
 
 const flightData = [
   { date: "Jan", flights: 12, coverage: 85 },
@@ -489,14 +489,14 @@ export default function Dashboard() {
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-600">© UASFAR-2025_1 course | Ifgi Münster</p>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">
+            {/* <Button variant="outline" size="sm">
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh Data
             </Button>
             <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
               Export Data
-            </Button>
+            </Button> */}
           </div>
         </div>
       </footer>

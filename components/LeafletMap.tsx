@@ -72,7 +72,7 @@ const LeafletMap = forwardRef<LeafletMapRef, LeafletMapProps>(({
     const map = L.map(mapRef.current).setView(center as [number, number], 13)
 
     // OpenStreetMap Basis-Layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map)
 
