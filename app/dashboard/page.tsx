@@ -1,27 +1,28 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { MapPin } from "lucide-react"
+import { useState, useEffect, useRef } from "react";
 import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts"
-import dynamic from 'next/dynamic'
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { MapPin } from "lucide-react";
+import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import dynamic from "next/dynamic";
 
-const LiveWeather = dynamic(() => import('@/components/LiveWeather'), { 
+const LiveWeather = dynamic(() => import("@/components/LiveWeather"), {
   ssr: false,
-  loading: () => <div className="h-20 bg-gray-100 animate-pulse rounded" />
-})
+  loading: () => <div className="h-20 bg-gray-100 animate-pulse rounded" />,
+});
 
-const LeafletMap = dynamic(() => import('@/components/LeafletMap'), {
+const LeafletMap = dynamic(() => import("@/components/LeafletMap"), {
   ssr: false,
-  loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />
+  loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />,
 });
 
 interface LeafletMapRef {
@@ -35,37 +36,39 @@ const flightData = [
   { date: "Apr", flights: 22, coverage: 95 },
   { date: "May", flights: 25, coverage: 91 },
   { date: "Jun", flights: 28, coverage: 97 },
-]
+];
 
 const waterQualityData = [
   { time: "13:15", ph: 7.8, oxygen: 8.44, temp: 18.8 }, // Station 1
-  { time: "13:37", ph: 8.0, oxygen: 8.55, temp: 18.4 }, // Station 2  
+  { time: "13:37", ph: 8.0, oxygen: 8.55, temp: 18.4 }, // Station 2
   { time: "14:00", ph: 8.0, oxygen: 8.79, temp: 19.6 }, // Station 3
   { time: "14:18", ph: 7.9, oxygen: 8.41, temp: 18.6 }, // Station 6
   { time: "14:35", ph: 8.2, oxygen: 8.34, temp: 18.5 }, // Station 7
-  { time: "14:55", ph: 8.2, oxygen: 8.30, temp: 18.8 }, // Station 8
-]
+  { time: "14:55", ph: 8.2, oxygen: 8.3, temp: 18.8 }, // Station 8
+];
 
 export default function Dashboard() {
-  const [currentTime, setCurrentTime] = useState('')
-  const [isClient, setIsClient] = useState(false)
-  const mapRef = useRef<LeafletMapRef>(null)
-  
+  const [currentTime, setCurrentTime] = useState("");
+  const [isClient, setIsClient] = useState(false);
+  const mapRef = useRef<LeafletMapRef>(null);
+
   // State für Survey-Bild - direkt das komprimierte Bild laden
-  const [surveyImageUrl] = useState<string>('/survey-data/compressed_survey_new.jpg')
-  
+  const [surveyImageUrl] = useState<string>(
+    "/survey-data/compressed_survey_new.jpg",
+  );
+
   // ECHTE Koordinaten aus GeoTIFF (ETRS89 UTM 32N -> WGS84)
   // Diese exakten Koordinaten haben ursprünglich funktioniert!
   const [surveyBounds] = useState<[[number, number], [number, number]]>([
     [51.944211596013005, 7.571090165784341], // Southwest - EXAKTE ursprüngliche Koordinaten
-    [51.94641954070195, 7.5736040521594665]  // Northeast - EXAKTE ursprüngliche Koordinaten
-  ])
+    [51.94641954070195, 7.5736040521594665], // Northeast - EXAKTE ursprüngliche Koordinaten
+  ]);
 
   // Zeit nur im Client setzen (Hydration-Problem lösen)
   useEffect(() => {
-    setCurrentTime(new Date().toLocaleString())
-    setIsClient(true)
-  }, [])
+    setCurrentTime(new Date().toLocaleString());
+    setIsClient(true);
+  }, []);
 
   // REAL measurement data from Excel table
   const measurementPoints = [
@@ -82,7 +85,7 @@ export default function Dashboard() {
       flowVelocity: 9.1,
       restored: "y",
       name: "Measurement Station 1",
-      type: "Restored"
+      type: "Restored",
     },
     {
       lat: 51.94504219,
@@ -97,7 +100,7 @@ export default function Dashboard() {
       flowVelocity: 5.6,
       restored: "y",
       name: "Measurement Station 2",
-      type: "Restored"
+      type: "Restored",
     },
     {
       lat: 51.94539172,
@@ -112,7 +115,7 @@ export default function Dashboard() {
       flowVelocity: "n/a",
       restored: "n",
       name: "Measurement Station 3",
-      type: "Not restored"
+      type: "Not restored",
     },
     {
       lat: 51.94591424,
@@ -127,7 +130,7 @@ export default function Dashboard() {
       flowVelocity: 13.5,
       restored: "n",
       name: "Measurement Station 6",
-      type: "Not restored"
+      type: "Not restored",
     },
     {
       lat: 51.9469839,
@@ -142,7 +145,7 @@ export default function Dashboard() {
       flowVelocity: 10.3,
       restored: "n",
       name: "Measurement Station 7",
-      type: "Not restored"
+      type: "Not restored",
     },
     {
       lat: 51.94405765,
@@ -157,9 +160,9 @@ export default function Dashboard() {
       flowVelocity: 22.68,
       restored: "y",
       name: "Measurement Station 8",
-      type: "Restored"
-    }
-  ]
+      type: "Restored",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -169,7 +172,9 @@ export default function Dashboard() {
           <div className="flex items-center gap-4">
             <SidebarTrigger />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">UAV Protected Area Study - Dashboard</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                UAV Protected Area Study - Dashboard
+              </h1>
               <p className="text-sm text-gray-600">
                 Last updated: <span className="font-medium">{currentTime}</span>
               </p>
@@ -203,9 +208,14 @@ export default function Dashboard() {
                   <span className="font-bold text-red-600">1.0 avg</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-red-500 h-2 rounded-full" style={{ width: "60%" }}></div>
+                  <div
+                    className="bg-red-500 h-2 rounded-full"
+                    style={{ width: "60%" }}
+                  ></div>
                 </div>
-                <div className="text-xs text-gray-600">Non-restored areas show higher species diversity</div>
+                <div className="text-xs text-gray-600">
+                  Non-restored areas show higher species diversity
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -225,9 +235,14 @@ export default function Dashboard() {
                   <span className="font-bold text-blue-600">8.51 mg/L</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "85%" }}></div>
+                  <div
+                    className="bg-blue-500 h-2 rounded-full"
+                    style={{ width: "85%" }}
+                  ></div>
                 </div>
-                <div className="text-xs text-gray-600">Slightly higher in non-restored areas</div>
+                <div className="text-xs text-gray-600">
+                  Slightly higher in non-restored areas
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -247,9 +262,14 @@ export default function Dashboard() {
                   <span className="font-bold text-orange-600">18.9°C</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-orange-500 h-2 rounded-full" style={{ width: "75%" }}></div>
+                  <div
+                    className="bg-orange-500 h-2 rounded-full"
+                    style={{ width: "75%" }}
+                  ></div>
                 </div>
-                <div className="text-xs text-gray-600">Slightly higher in non-restored areas</div>
+                <div className="text-xs text-gray-600">
+                  Slightly higher in non-restored areas
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -270,9 +290,14 @@ export default function Dashboard() {
                   <span className="font-bold text-blue-600">8.03</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "52%" }}></div>
+                  <div
+                    className="bg-blue-500 h-2 rounded-full"
+                    style={{ width: "52%" }}
+                  ></div>
                 </div>
-                <div className="text-xs text-gray-600">Slightly higher in non-restored areas</div>
+                <div className="text-xs text-gray-600">
+                  Slightly higher in non-restored areas
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -292,9 +317,14 @@ export default function Dashboard() {
                   <span className="font-bold text-red-600">527 μS/cm</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-red-500 h-2 rounded-full" style={{ width: "70%" }}></div>
+                  <div
+                    className="bg-red-500 h-2 rounded-full"
+                    style={{ width: "70%" }}
+                  ></div>
                 </div>
-                <div className="text-xs text-gray-600">Higher mineral content in non-restored</div>
+                <div className="text-xs text-gray-600">
+                  Higher mineral content in non-restored
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -314,9 +344,14 @@ export default function Dashboard() {
                   <span className="font-bold text-green-600">11.9 m/s</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "80%" }}></div>
+                  <div
+                    className="bg-blue-500 h-2 rounded-full"
+                    style={{ width: "80%" }}
+                  ></div>
                 </div>
-                <div className="text-xs text-gray-600">Faster flow in restored areas</div>
+                <div className="text-xs text-gray-600">
+                  Faster flow in restored areas
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -369,7 +404,9 @@ export default function Dashboard() {
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
                   UAV Survey Area
-                  <Badge variant="secondary" className="ml-2">Survey Image</Badge>
+                  <Badge variant="secondary" className="ml-2">
+                    Survey Image
+                  </Badge>
                 </CardTitle>
                 <CardDescription>
                   Interactive map with survey data overlay
@@ -377,12 +414,12 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent className="p-0 h-80">
                 {isClient ? (
-                  <LeafletMap 
+                  <LeafletMap
                     ref={mapRef}
                     measurementPoints={measurementPoints}
                     surveyImageUrl={surveyImageUrl}
                     surveyBounds={surveyBounds}
-                    height="100%" 
+                    height="100%"
                   />
                 ) : (
                   <div className="h-full bg-gray-100 animate-pulse rounded" />
@@ -400,21 +437,24 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-12 text-xs flex flex-col"
                     onClick={() => {
-                      console.log('Button clicked for station 1, mapRef:', mapRef.current);
+                      console.log(
+                        "Button clicked for station 1, mapRef:",
+                        mapRef.current,
+                      );
                       mapRef.current?.openPopup(1);
                     }}
                   >
                     <span className="font-medium">Station 1</span>
                     <span className="text-green-600 text-xs">Restored</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-12 text-xs flex flex-col"
                     onClick={() => {
                       mapRef.current?.openPopup(2);
@@ -423,9 +463,9 @@ export default function Dashboard() {
                     <span className="font-medium">Station 2</span>
                     <span className="text-green-600 text-xs">Restored</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-12 text-xs flex flex-col"
                     onClick={() => {
                       mapRef.current?.openPopup(3);
@@ -434,9 +474,9 @@ export default function Dashboard() {
                     <span className="font-medium">Station 3</span>
                     <span className="text-red-600 text-xs">Non-Restored</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-12 text-xs flex flex-col"
                     onClick={() => {
                       mapRef.current?.openPopup(6);
@@ -445,9 +485,9 @@ export default function Dashboard() {
                     <span className="font-medium">Station 6</span>
                     <span className="text-red-600 text-xs">Non-Restored</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-12 text-xs flex flex-col"
                     onClick={() => {
                       mapRef.current?.openPopup(7);
@@ -456,9 +496,9 @@ export default function Dashboard() {
                     <span className="font-medium">Station 7</span>
                     <span className="text-red-600 text-xs">Non-Restored</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="h-12 text-xs flex flex-col"
                     onClick={() => {
                       mapRef.current?.openPopup(8);
@@ -487,7 +527,9 @@ export default function Dashboard() {
       {/* Footer */}
       <footer className="bg-white border-t px-6 py-4 mt-6">
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">© UASFAR-2025_1 course | Ifgi Münster</p>
+          <p className="text-sm text-gray-600">
+            © UASFAR-2025_1 course | Ifgi Münster
+          </p>
           <div className="flex gap-2">
             {/* <Button variant="outline" size="sm">
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -501,5 +543,5 @@ export default function Dashboard() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

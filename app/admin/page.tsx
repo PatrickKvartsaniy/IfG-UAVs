@@ -1,16 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,9 +40,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Plus, Edit, Trash2, Upload, Download, Settings, Database, Shield } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+} from "@/components/ui/alert-dialog";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Upload,
+  Download,
+  Settings,
+  Database,
+  Shield,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const users = [
   {
@@ -58,34 +86,64 @@ const users = [
     status: "Inactive",
     lastLogin: "2024-01-15",
   },
-]
+];
 
 const dataEntries = [
-  { id: 1, type: "Species", name: "European Kingfisher", status: "Published", author: "Dr. Chen", date: "2024-01-25" },
-  { id: 2, type: "Flight Data", name: "January Survey #3", status: "Processing", author: "System", date: "2024-01-24" },
-  { id: 3, type: "Story Map", name: "Seasonal Changes", status: "Draft", author: "Mike Johnson", date: "2024-01-23" },
-  { id: 4, type: "Species", name: "Brown Trout", status: "Published", author: "Lisa Wang", date: "2024-01-22" },
-]
+  {
+    id: 1,
+    type: "Species",
+    name: "European Kingfisher",
+    status: "Published",
+    author: "Dr. Chen",
+    date: "2024-01-25",
+  },
+  {
+    id: 2,
+    type: "Flight Data",
+    name: "January Survey #3",
+    status: "Processing",
+    author: "System",
+    date: "2024-01-24",
+  },
+  {
+    id: 3,
+    type: "Story Map",
+    name: "Seasonal Changes",
+    status: "Draft",
+    author: "Mike Johnson",
+    date: "2024-01-23",
+  },
+  {
+    id: 4,
+    type: "Species",
+    name: "Brown Trout",
+    status: "Published",
+    author: "Lisa Wang",
+    date: "2024-01-22",
+  },
+];
 
 export default function AdminPage() {
-  const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(null)
-  const [isAddingUser, setIsAddingUser] = useState(false)
-  const { toast } = useToast()
+  const [selectedUser, setSelectedUser] = useState<(typeof users)[0] | null>(
+    null,
+  );
+  const [isAddingUser, setIsAddingUser] = useState(false);
+  const { toast } = useToast();
 
   const handleDeleteUser = (userId: number) => {
     toast({
       title: "User deleted",
       description: "The user has been successfully removed from the system.",
-    })
-  }
+    });
+  };
 
   const handleAddUser = () => {
-    setIsAddingUser(false)
+    setIsAddingUser(false);
     toast({
       title: "User added",
       description: "New user has been successfully added to the system.",
-    })
-  }
+    });
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -118,7 +176,9 @@ export default function AdminPage() {
             <Card>
               <CardHeader>
                 <CardTitle>System Users</CardTitle>
-                <CardDescription>Manage user accounts and permissions</CardDescription>
+                <CardDescription>
+                  Manage user accounts and permissions
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -135,13 +195,27 @@ export default function AdminPage() {
                   <TableBody>
                     {users.map((user) => (
                       <TableRow key={user.id}>
-                        <TableCell className="font-medium">{user.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {user.name}
+                        </TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell>
-                          <Badge variant={user.role === "Admin" ? "default" : "secondary"}>{user.role}</Badge>
+                          <Badge
+                            variant={
+                              user.role === "Admin" ? "default" : "secondary"
+                            }
+                          >
+                            {user.role}
+                          </Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={user.status === "Active" ? "default" : "secondary"}>{user.status}</Badge>
+                          <Badge
+                            variant={
+                              user.status === "Active" ? "default" : "secondary"
+                            }
+                          >
+                            {user.status}
+                          </Badge>
                         </TableCell>
                         <TableCell>{user.lastLogin}</TableCell>
                         <TableCell>
@@ -157,14 +231,19 @@ export default function AdminPage() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete User</AlertDialogTitle>
+                                  <AlertDialogTitle>
+                                    Delete User
+                                  </AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Are you sure you want to delete {user.name}? This action cannot be undone.
+                                    Are you sure you want to delete {user.name}?
+                                    This action cannot be undone.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => handleDeleteUser(user.id)}>
+                                  <AlertDialogAction
+                                    onClick={() => handleDeleteUser(user.id)}
+                                  >
                                     Delete
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
@@ -194,7 +273,11 @@ export default function AdminPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="Enter email address" />
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter email address"
+                      />
                     </div>
                   </div>
                   <div className="space-y-2">
@@ -213,7 +296,10 @@ export default function AdminPage() {
                   </div>
                   <div className="flex gap-2">
                     <Button onClick={handleAddUser}>Add User</Button>
-                    <Button variant="outline" onClick={() => setIsAddingUser(false)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsAddingUser(false)}
+                    >
                       Cancel
                     </Button>
                   </div>
@@ -234,7 +320,9 @@ export default function AdminPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Content Entries</CardTitle>
-                <CardDescription>Manage species data, flight records, and story maps</CardDescription>
+                <CardDescription>
+                  Manage species data, flight records, and story maps
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -254,7 +342,9 @@ export default function AdminPage() {
                         <TableCell>
                           <Badge variant="outline">{entry.type}</Badge>
                         </TableCell>
-                        <TableCell className="font-medium">{entry.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {entry.name}
+                        </TableCell>
                         <TableCell>
                           <Badge
                             variant={
@@ -303,21 +393,27 @@ export default function AdminPage() {
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Maintenance Mode</Label>
-                      <p className="text-sm text-muted-foreground">Enable system maintenance mode</p>
+                      <p className="text-sm text-muted-foreground">
+                        Enable system maintenance mode
+                      </p>
                     </div>
                     <Switch />
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Auto Backup</Label>
-                      <p className="text-sm text-muted-foreground">Automatic daily backups</p>
+                      <p className="text-sm text-muted-foreground">
+                        Automatic daily backups
+                      </p>
                     </div>
                     <Switch defaultChecked />
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Email Notifications</Label>
-                      <p className="text-sm text-muted-foreground">System alerts and updates</p>
+                      <p className="text-sm text-muted-foreground">
+                        System alerts and updates
+                      </p>
                     </div>
                     <Switch defaultChecked />
                   </div>
@@ -352,7 +448,9 @@ export default function AdminPage() {
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <Label>Two-Factor Authentication</Label>
-                      <p className="text-sm text-muted-foreground">Require 2FA for all users</p>
+                      <p className="text-sm text-muted-foreground">
+                        Require 2FA for all users
+                      </p>
                     </div>
                     <Switch />
                   </div>
@@ -371,13 +469,17 @@ export default function AdminPage() {
                     <Database className="h-5 w-5" />
                     Database Management
                   </CardTitle>
-                  <CardDescription>Manage database operations and maintenance</CardDescription>
+                  <CardDescription>
+                    Manage database operations and maintenance
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label>Database Size</Label>
                     <p className="text-2xl font-bold">2.4 GB</p>
-                    <p className="text-sm text-muted-foreground">Last updated: 2024-01-25</p>
+                    <p className="text-sm text-muted-foreground">
+                      Last updated: 2024-01-25
+                    </p>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="outline" className="flex-1">
@@ -402,21 +504,27 @@ export default function AdminPage() {
                     <div className="flex justify-between items-center p-3 border rounded">
                       <div>
                         <p className="font-medium">Full System Backup</p>
-                        <p className="text-sm text-muted-foreground">2024-01-25 02:00 AM</p>
+                        <p className="text-sm text-muted-foreground">
+                          2024-01-25 02:00 AM
+                        </p>
                       </div>
                       <Badge>Success</Badge>
                     </div>
                     <div className="flex justify-between items-center p-3 border rounded">
                       <div>
                         <p className="font-medium">Database Backup</p>
-                        <p className="text-sm text-muted-foreground">2024-01-24 02:00 AM</p>
+                        <p className="text-sm text-muted-foreground">
+                          2024-01-24 02:00 AM
+                        </p>
                       </div>
                       <Badge>Success</Badge>
                     </div>
                     <div className="flex justify-between items-center p-3 border rounded">
                       <div>
                         <p className="font-medium">Media Files Backup</p>
-                        <p className="text-sm text-muted-foreground">2024-01-23 02:00 AM</p>
+                        <p className="text-sm text-muted-foreground">
+                          2024-01-23 02:00 AM
+                        </p>
                       </div>
                       <Badge variant="secondary">Partial</Badge>
                     </div>
@@ -429,17 +537,23 @@ export default function AdminPage() {
             <Card>
               <CardHeader>
                 <CardTitle>System Statistics</CardTitle>
-                <CardDescription>Overview of system usage and performance</CardDescription>
+                <CardDescription>
+                  Overview of system usage and performance
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-4">
                   <div className="text-center">
                     <p className="text-2xl font-bold">291</p>
-                    <p className="text-sm text-muted-foreground">Total Species</p>
+                    <p className="text-sm text-muted-foreground">
+                      Total Species
+                    </p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold">120</p>
-                    <p className="text-sm text-muted-foreground">Flight Records</p>
+                    <p className="text-sm text-muted-foreground">
+                      Flight Records
+                    </p>
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold">6</p>
@@ -447,7 +561,9 @@ export default function AdminPage() {
                   </div>
                   <div className="text-center">
                     <p className="text-2xl font-bold">4</p>
-                    <p className="text-sm text-muted-foreground">Active Users</p>
+                    <p className="text-sm text-muted-foreground">
+                      Active Users
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -456,5 +572,5 @@ export default function AdminPage() {
         </Tabs>
       </div>
     </div>
-  )
+  );
 }
