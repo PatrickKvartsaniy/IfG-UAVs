@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -19,6 +20,13 @@ import {
   AreaChart,
   Area,
 } from "recharts"
+import dynamic from 'next/dynamic'
+import LeafletMap, { LeafletMapRef } from '@/components/LeafletMap'
+
+const LiveWeather = dynamic(() => import('@/components/LiveWeather'), { 
+  ssr: false,
+  loading: () => <div className="h-20 bg-gray-100 animate-pulse rounded" />
+})
 
 const flightData = [
   { date: "Jan", flights: 12, coverage: 85 },
@@ -30,16 +38,128 @@ const flightData = [
 ]
 
 const waterQualityData = [
-  { time: "00:00", ph: 7.1, oxygen: 8.2, temp: 12.5 },
-  { time: "04:00", ph: 7.2, oxygen: 8.5, temp: 11.8 },
-  { time: "08:00", ph: 7.0, oxygen: 8.8, temp: 13.2 },
-  { time: "12:00", ph: 7.3, oxygen: 8.1, temp: 15.6 },
-  { time: "16:00", ph: 7.1, oxygen: 8.4, temp: 16.2 },
-  { time: "20:00", ph: 7.2, oxygen: 8.6, temp: 14.1 },
+  { time: "13:15", ph: 7.8, oxygen: 8.44, temp: 18.8 }, // Station 1
+  { time: "13:37", ph: 8.0, oxygen: 8.55, temp: 18.4 }, // Station 2  
+  { time: "14:00", ph: 8.0, oxygen: 8.79, temp: 19.6 }, // Station 3
+  { time: "14:18", ph: 7.9, oxygen: 8.41, temp: 18.6 }, // Station 6
+  { time: "14:35", ph: 8.2, oxygen: 8.34, temp: 18.5 }, // Station 7
+  { time: "14:55", ph: 8.2, oxygen: 8.30, temp: 18.8 }, // Station 8
 ]
 
 export default function Dashboard() {
-  const currentTime = new Date().toLocaleString()
+  const [currentTime, setCurrentTime] = useState('')
+  const [isClient, setIsClient] = useState(false)
+  const mapRef = useRef<LeafletMapRef>(null)
+  
+  // State für Survey-Bild - direkt das komprimierte Bild laden
+  const [surveyImageUrl] = useState<string>('/survey-data/compressed_survey_new.jpg')
+  
+  // ECHTE Koordinaten aus GeoTIFF (ETRS89 UTM 32N -> WGS84)
+  // Diese exakten Koordinaten haben ursprünglich funktioniert!
+  const [surveyBounds] = useState<[[number, number], [number, number]]>([
+    [51.944211596013005, 7.571090165784341], // Southwest - EXAKTE ursprüngliche Koordinaten
+    [51.94641954070195, 7.5736040521594665]  // Northeast - EXAKTE ursprüngliche Koordinaten
+  ])
+
+  // Zeit nur im Client setzen (Hydration-Problem lösen)
+  useEffect(() => {
+    setCurrentTime(new Date().toLocaleString())
+    setIsClient(true)
+  }, [])
+
+  // REAL measurement data from Excel table
+  const measurementPoints = [
+    {
+      lat: 51.94476251,
+      lon: 7.573200841,
+      objectId: 1,
+      creationDate: "5/30/2025 1:15:53 PM",
+      numberOfSpecies: 0,
+      oxygen: 8.44,
+      temperature: 18.8,
+      pH: 7.8,
+      conductivity: 520,
+      flowVelocity: 9.1,
+      restored: "y",
+      name: "Measurement Station 1",
+      type: "Restored"
+    },
+    {
+      lat: 51.94504219,
+      lon: 7.572768064,
+      objectId: 2,
+      creationDate: "5/30/2025 1:37:45 PM",
+      numberOfSpecies: 0,
+      oxygen: 8.55,
+      temperature: 18.4,
+      pH: 8.0,
+      conductivity: 523,
+      flowVelocity: 5.6,
+      restored: "y",
+      name: "Measurement Station 2",
+      type: "Restored"
+    },
+    {
+      lat: 51.94539172,
+      lon: 7.571738768,
+      objectId: 3,
+      creationDate: "5/30/2025 2:00:48 PM",
+      numberOfSpecies: 1,
+      oxygen: 8.79,
+      temperature: 19.6,
+      pH: 8.0,
+      conductivity: 522,
+      flowVelocity: "n/a",
+      restored: "n",
+      name: "Measurement Station 3",
+      type: "Not restored"
+    },
+    {
+      lat: 51.94591424,
+      lon: 7.571528757,
+      objectId: 6,
+      creationDate: "5/30/2025 2:18:16 PM",
+      numberOfSpecies: 1,
+      oxygen: 8.41,
+      temperature: 18.6,
+      pH: 7.9,
+      conductivity: 524,
+      flowVelocity: 13.5,
+      restored: "n",
+      name: "Measurement Station 6",
+      type: "Not restored"
+    },
+    {
+      lat: 51.9469839,
+      lon: 7.571487392,
+      objectId: 7,
+      creationDate: "5/30/2025 2:35:08 PM",
+      numberOfSpecies: 1,
+      oxygen: 8.34,
+      temperature: 18.5,
+      pH: 8.2,
+      conductivity: 535,
+      flowVelocity: 10.3,
+      restored: "n",
+      name: "Measurement Station 7",
+      type: "Not restored"
+    },
+    {
+      lat: 51.94405765,
+      lon: 7.573433435,
+      objectId: 8,
+      creationDate: "5/30/2025 2:55:37 PM",
+      numberOfSpecies: 2,
+      oxygen: 8.3,
+      temperature: 18.8,
+      pH: 8.2,
+      conductivity: 527,
+      flowVelocity: 22.68,
+      restored: "y",
+      name: "Measurement Station 8",
+      type: "Restored"
+    }
+  ]
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -66,109 +186,70 @@ export default function Dashboard() {
         {/* Top Widget Grid - 8 Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {/* Row 1 */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Thermometer className="h-4 w-4" />
-                Live Weather
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-2xl font-bold">18°C</span>
-                  <div className="text-right text-xs text-gray-600">
-                    <div>Wind: 5 km/h</div>
-                    <div>Humidity: 65%</div>
-                  </div>
-                </div>
-                <div className="text-xs text-gray-500">
-                  <div>Pressure: 1013 hPa</div>
-                  <div>Visibility: 10 km</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <LiveWeather />
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Vegetation</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-16 mb-2">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={[
-                        { name: "Forest", value: 45, color: "#10b981" },
-                        { name: "Grassland", value: 30, color: "#84cc16" },
-                        { name: "Wetland", value: 25, color: "#06b6d4" },
-                      ]}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={15}
-                      outerRadius={30}
-                      dataKey="value"
-                    >
-                      <Cell fill="#10b981" />
-                      <Cell fill="#84cc16" />
-                      <Cell fill="#06b6d4" />
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="text-xs space-y-1">
-                <div className="flex justify-between">
-                  <span>Forest</span>
-                  <span>45%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Grassland</span>
-                  <span>30%</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Plant Health</CardTitle>
+              <CardTitle className="text-sm">Species Count</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-xs">Healthy:</span>
-                  <span className="font-bold text-green-600">88%</span>
+                  <span className="text-xs">Restored:</span>
+                  <span className="font-bold text-green-600">0.67 avg</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs">Unhealthy:</span>
-                  <span className="font-bold text-orange-600">8%</span>
+                  <span className="text-xs">Non-Restored:</span>
+                  <span className="font-bold text-red-600">1.0 avg</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-green-500 h-2 rounded-full" style={{ width: "88%" }}></div>
+                  <div className="bg-red-500 h-2 rounded-full" style={{ width: "60%" }}></div>
                 </div>
+                <div className="text-xs text-gray-600">Non-restored areas show higher species diversity</div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Insects</CardTitle>
+              <CardTitle className="text-sm">Oxygen Levels</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-xs">Species:</span>
-                  <span className="font-bold">13</span>
+                  <span className="text-xs">Restored:</span>
+                  <span className="font-bold text-green-600">8.43 mg/L</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs">Beneficial:</span>
-                  <span className="font-bold text-green-600">78%</span>
+                  <span className="text-xs">Non-Restored:</span>
+                  <span className="font-bold text-blue-600">8.51 mg/L</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "85%" }}></div>
+                </div>
+                <div className="text-xs text-gray-600">Slightly higher in non-restored areas</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm">Temperature</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-xs">Restored:</span>
+                  <span className="font-bold text-green-600">18.7°C</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs">Activity:</span>
-                  <span className="font-bold text-blue-600">High</span>
+                  <span className="text-xs">Non-Restored:</span>
+                  <span className="font-bold text-orange-600">18.9°C</span>
                 </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-orange-500 h-2 rounded-full" style={{ width: "75%" }}></div>
+                </div>
+                <div className="text-xs text-gray-600">Slightly higher in non-restored areas</div>
               </div>
             </CardContent>
           </Card>
@@ -176,96 +257,103 @@ export default function Dashboard() {
           {/* Row 2 */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Water Quality</CardTitle>
+              <CardTitle className="text-sm">pH Values</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-xs">pH Level:</span>
-                  <span className="font-bold text-green-600">7.2</span>
+                  <span className="text-xs">Restored:</span>
+                  <span className="font-bold text-green-600">8.0</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs">Oxygen:</span>
-                  <span className="font-bold text-blue-600">8.5 mg/L</span>
+                  <span className="text-xs">Non-Restored:</span>
+                  <span className="font-bold text-blue-600">8.03</span>
                 </div>
-                <div className="text-xs text-green-600 font-medium">Status: Excellent</div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "52%" }}></div>
+                </div>
+                <div className="text-xs text-gray-600">Slightly higher in non-restored areas</div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Wildlife</CardTitle>
+              <CardTitle className="text-sm">Conductivity</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-xs flex items-center gap-1">
-                    <Bird className="h-3 w-3" />
-                    Birds:
-                  </span>
-                  <span className="font-bold">34</span>
+                  <span className="text-xs">Restored:</span>
+                  <span className="font-bold text-green-600">523 μS/cm</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs flex items-center gap-1">
-                    <TreePine className="h-3 w-3" />
-                    Mammals:
-                  </span>
-                  <span className="font-bold">12</span>
+                  <span className="text-xs">Non-Restored:</span>
+                  <span className="font-bold text-red-600">527 μS/cm</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-xs flex items-center gap-1">
-                    <Fish className="h-3 w-3" />
-                    Fish:
-                  </span>
-                  <span className="font-bold">67</span>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-red-500 h-2 rounded-full" style={{ width: "70%" }}></div>
                 </div>
+                <div className="text-xs text-gray-600">Higher mineral content in non-restored</div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm">Monitoring Stations</CardTitle>
+              <CardTitle className="text-sm">Flow Velocity</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm" className="h-8 text-xs">
-                  Station 1
-                </Button>
-                <Button variant="outline" size="sm" className="h-8 text-xs">
-                  Station 2
-                </Button>
-                <Button variant="outline" size="sm" className="h-8 text-xs">
-                  Station 3
-                </Button>
-                <Button variant="outline" size="sm" className="h-8 text-xs">
-                  Station 4
-                </Button>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-xs">Restored:</span>
+                  <span className="font-bold text-blue-600">12.5 m/s</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs">Non-Restored:</span>
+                  <span className="font-bold text-green-600">11.9 m/s</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: "80%" }}></div>
+                </div>
+                <div className="text-xs text-gray-600">Faster flow in restored areas</div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Plane className="h-4 w-4" />
-                UAV Operations
-              </CardTitle>
+              <CardTitle className="text-sm">SenseBox Locations</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
+              <div className="h-16 mb-2">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={[
+                        { name: "Restored", value: 50, color: "#22c55e" },
+                        { name: "Non-Restored", value: 50, color: "#ef4444" },
+                      ]}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={15}
+                      outerRadius={30}
+                      dataKey="value"
+                    >
+                      <Cell fill="#22c55e" />
+                      <Cell fill="#ef4444" />
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="text-xs space-y-1">
                 <div className="flex justify-between">
-                  <span className="text-xs">Total Flights:</span>
-                  <span className="font-bold">120</span>
+                  <span>Restored</span>
+                  <span>3 stations</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-xs">Coverage:</span>
-                  <span className="font-bold text-green-600">97%</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-xs">This Month:</span>
-                  <span className="font-bold">28</span>
+                  <span>Non-Restored</span>
+                  <span>3 stations</span>
                 </div>
               </div>
             </CardContent>
@@ -274,71 +362,122 @@ export default function Dashboard() {
 
         {/* Main Dashboard Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Sidebar - Climate Chart */}
-          <div className="lg:col-span-3">
+          {/* Central Map - Expanded */}
+          <div className="lg:col-span-9">
             <Card className="h-96">
               <CardHeader>
-                <CardTitle>Flight Activity</CardTitle>
-                <CardDescription>Monthly operations</CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  UAV Survey Area
+                  <Badge variant="secondary" className="ml-2">Survey Image</Badge>
+                </CardTitle>
+                <CardDescription>
+                  Interactive map with survey data overlay
+                </CardDescription>
               </CardHeader>
-              <CardContent className="h-full">
-                <ResponsiveContainer width="100%" height="80%">
-                  <AreaChart data={flightData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="flights" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
-                  </AreaChart>
-                </ResponsiveContainer>
+              <CardContent className="p-0 h-80">
+                {isClient ? (
+                  <LeafletMap 
+                    ref={mapRef}
+                    measurementPoints={measurementPoints}
+                    surveyImageUrl={surveyImageUrl}
+                    surveyBounds={surveyBounds}
+                    height="100%" 
+                  />
+                ) : (
+                  <div className="h-full bg-gray-100 animate-pulse rounded" />
+                )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Central Map */}
-          <div className="lg:col-span-6">
+          {/* Right Sidebar - Monitoring Stations */}
+          <div className="lg:col-span-3">
             <Card className="h-96">
               <CardHeader>
-                <CardTitle>Study Area Map</CardTitle>
-                <CardDescription>Protected river ecosystem</CardDescription>
+                <CardTitle>Monitoring Stations</CardTitle>
+                <CardDescription>Click to view station details</CardDescription>
               </CardHeader>
-              <CardContent className="p-0">
-                <div className="relative h-64 bg-gradient-to-br from-green-100 to-blue-100 rounded-b-lg overflow-hidden">
-                  <img
-                    src="/placeholder.svg?height=256&width=500"
-                    alt="Study Area Map"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
-                    <div className="text-white text-center">
-                      <MapPin className="h-8 w-8 mx-auto mb-2" />
-                      <p className="text-base font-semibold">Interactive Map</p>
-                      <p className="text-sm opacity-90">45.2671° N, 19.8335° E</p>
-                    </div>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-12 text-xs flex flex-col"
+                    onClick={() => {
+                      console.log('Button clicked for station 1, mapRef:', mapRef.current);
+                      mapRef.current?.openPopup(1);
+                    }}
+                  >
+                    <span className="font-medium">Station 1</span>
+                    <span className="text-green-600 text-xs">Restored</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-12 text-xs flex flex-col"
+                    onClick={() => {
+                      mapRef.current?.openPopup(2);
+                    }}
+                  >
+                    <span className="font-medium">Station 2</span>
+                    <span className="text-green-600 text-xs">Restored</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-12 text-xs flex flex-col"
+                    onClick={() => {
+                      mapRef.current?.openPopup(3);
+                    }}
+                  >
+                    <span className="font-medium">Station 3</span>
+                    <span className="text-red-600 text-xs">Non-Restored</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-12 text-xs flex flex-col"
+                    onClick={() => {
+                      mapRef.current?.openPopup(6);
+                    }}
+                  >
+                    <span className="font-medium">Station 6</span>
+                    <span className="text-red-600 text-xs">Non-Restored</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-12 text-xs flex flex-col"
+                    onClick={() => {
+                      mapRef.current?.openPopup(7);
+                    }}
+                  >
+                    <span className="font-medium">Station 7</span>
+                    <span className="text-red-600 text-xs">Non-Restored</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-12 text-xs flex flex-col"
+                    onClick={() => {
+                      mapRef.current?.openPopup(8);
+                    }}
+                  >
+                    <span className="font-medium">Station 8</span>
+                    <span className="text-green-600 text-xs">Restored</span>
+                  </Button>
+                </div>
+                <div className="mt-4 text-xs text-gray-600">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>Restored Areas (3)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    <span>Non-Restored Areas (3)</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Right Sidebar - Water Level */}
-          <div className="lg:col-span-3">
-            <Card className="h-96">
-              <CardHeader>
-                <CardTitle>Water Quality</CardTitle>
-                <CardDescription>24-hour trends</CardDescription>
-              </CardHeader>
-              <CardContent className="h-full">
-                <ResponsiveContainer width="100%" height="80%">
-                  <LineChart data={waterQualityData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="time" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="ph" stroke="#8b5cf6" strokeWidth={2} />
-                    <Line type="monotone" dataKey="oxygen" stroke="#06b6d4" strokeWidth={2} />
-                  </LineChart>
-                </ResponsiveContainer>
               </CardContent>
             </Card>
           </div>
@@ -348,7 +487,7 @@ export default function Dashboard() {
       {/* Footer */}
       <footer className="bg-white border-t px-6 py-4 mt-6">
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">© UASFAR-2025_1 | Ifgi Münster</p>
+          <p className="text-sm text-gray-600">© UASFAR-2025_1 course | Ifgi Münster</p>
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
               <RefreshCw className="h-4 w-4 mr-2" />
