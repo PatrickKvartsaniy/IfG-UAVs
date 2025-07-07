@@ -522,26 +522,7 @@ export default function Dashboard() {
             </Card>
           </div>
         </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-white border-t px-6 py-4 mt-6">
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600">
-            © UASFAR-2025_1 course | Ifgi Münster
-          </p>
-          <div className="flex gap-2">
-            {/* <Button variant="outline" size="sm">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh Data
-            </Button>
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Export Data
-            </Button> */}
-          </div>
-        </div>
-      </footer>
+      </div>  
     </div>
   );
 }

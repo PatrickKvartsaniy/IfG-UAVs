@@ -1,25 +1,18 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Search, MapPin, TreePine, Fish, Bird, Flower } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import dynamic from "next/dynamic";
+import { useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Search, MapPin, TreePine, Fish, Bird, Flower } from "lucide-react"
+import dynamic from "next/dynamic"
 
-// Import Mapbox component dynamically
-const MapWithNoSSR = dynamic(() => import("@/components/mapbox-map"), {
+// Import Leaflet component dynamically
+const MapWithNoSSR = dynamic(() => import("@/components/WikiMap"), {
   ssr: false,
-});
+})
 
 const wildlifeData = [
   {
@@ -144,279 +137,223 @@ const wildlifeData = [
   },
 ];
 
-const categories = [
-  { id: "all", label: "All Species", count: wildlifeData.length },
-  {
-    id: "birds",
-    label: "Birds",
-    count: wildlifeData.filter((item) => item.category === "birds").length,
-  },
-  {
-    id: "fish",
-    label: "Fish",
-    count: wildlifeData.filter((item) => item.category === "fish").length,
-  },
-  {
-    id: "flora",
-    label: "Flora",
-    count: wildlifeData.filter((item) => item.category === "flora").length,
-  },
-  {
-    id: "mammals",
-    label: "Mammals",
-    count: wildlifeData.filter((item) => item.category === "mammals").length,
-  },
-];
+const categories = ["all", "birds", "fish", "flora", "mammals"]
 
 export default function WikiPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedSpecies, setSelectedSpecies] = useState<
-    (typeof wildlifeData)[0] | null
-  >(null);
-  const [mapKey, setMapKey] = useState(0); // Used to force map re-render
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("all")
+  const [selectedSpecies, setSelectedSpecies] = useState<(typeof wildlifeData)[0] | null>(null)
 
   const filteredData = wildlifeData.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.scientificName.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+      item.scientificName.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = selectedCategory === "all" || item.category === selectedCategory
+    return matchesSearch && matchesCategory
+  })
 
   const handleSpeciesClick = (species: (typeof wildlifeData)[0]) => {
-    setSelectedSpecies(species);
-    // Force map to re-render with new selected species
-    setMapKey((prev) => prev + 1);
-  };
+    setSelectedSpecies(species)
+  }
+
+  const clearSelection = () => {
+    setSelectedSpecies(null)
+  }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="flex items-center gap-2 px-4 py-3 border-b">
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <header className="flex items-center gap-2 px-6 py-4 bg-white border-b">
         <SidebarTrigger />
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-semibold">Wildlife Wiki</h1>
-          <Badge variant="outline">Flora & Fauna Database</Badge>
+          <h1 className="text-2xl font-bold">Wildlife Wiki</h1>
+          <Badge variant="outline">Interactive Species Database</Badge>
         </div>
       </header>
 
       <div className="flex-1 p-6">
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Left Panel - Search, Filter, and Species List */}
-          <div className="space-y-4">
-            {/* Search and Filter Panel */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Search & Filter</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div className="max-w-7xl mx-auto">
+          {/* Search and Filter Bar */}
+          <Card className="mb-6">
+            <CardContent className="p-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search species..."
+                    placeholder="Search species by name or scientific name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-8"
+                    className="pl-10"
                   />
                 </div>
-
-                <Tabs
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="birds">Birds</TabsTrigger>
-                    <TabsTrigger value="fish">Fish</TabsTrigger>
-                  </TabsList>
-                  <TabsList className="grid w-full grid-cols-2 mt-2">
-                    <TabsTrigger value="flora">Flora</TabsTrigger>
-                    <TabsTrigger value="mammals">Mammals</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex gap-2">
                   {categories.map((category) => (
-                    <div
-                      key={category.id}
-                      className="flex justify-between text-sm p-2 bg-muted rounded"
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                      className="capitalize"
                     >
-                      <span className="capitalize">{category.label}</span>
-                      <Badge variant="secondary" className="text-xs">
-                        {category.count}
-                      </Badge>
-                    </div>
+                      {category === "all" ? "All" : category}
+                    </Button>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Species Grid */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Species Database</CardTitle>
-                <CardDescription>
-                  Click on a species to view its location on the map
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-3 max-h-[600px] overflow-y-auto">
-                  {filteredData.map((species) => (
-                    <div
-                      key={species.id}
-                      className={`cursor-pointer p-3 border rounded-lg hover:shadow-md transition-shadow ${
-                        selectedSpecies?.id === species.id
-                          ? "ring-2 ring-primary bg-primary/5"
-                          : ""
-                      }`}
-                      onClick={() => handleSpeciesClick(species)}
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <species.icon className="h-4 w-4 text-primary" />
-                          <div>
-                            <h4 className="font-medium text-sm">
-                              {species.name}
-                            </h4>
-                            <p className="text-xs text-muted-foreground italic">
-                              {species.scientificName}
-                            </p>
-                          </div>
-                        </div>
-                        <Badge
-                          variant={
-                            species.status === "Protected"
-                              ? "destructive"
-                              : species.status === "Ancient"
-                                ? "default"
-                                : "secondary"
-                          }
-                          className="text-xs"
-                        >
-                          {species.status}
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
-                        {species.description}
-                      </p>
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span className="capitalize">{species.category}</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-5 px-2 text-xs"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSpeciesClick(species);
-                          }}
-                        >
-                          <MapPin className="h-3 w-3 mr-1" />
-                          View
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {filteredData.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-8">
-                    <Search className="h-8 w-8 text-muted-foreground mb-2" />
-                    <h3 className="font-medium mb-1">No species found</h3>
-                    <p className="text-sm text-muted-foreground text-center">
-                      Try adjusting your search terms or filters
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Right Panel - Map and Selected Species Details */}
-          <div className="space-y-4">
-            {/* Map */}
-            <Card className="overflow-hidden">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Location Map</CardTitle>
-                <CardDescription>
-                  Interactive map showing species habitat areas
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="h-[500px] w-full">
-                  <MapWithNoSSR
-                    key={mapKey}
-                    selectedSpecies={selectedSpecies}
-                    allSpecies={wildlifeData}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Selected Species Details */}
-            {selectedSpecies && (
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-3 gap-6">
+            {/* Species List */}
+            <div className="lg:col-span-1">
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <selectedSpecies.icon className="h-5 w-5" />
-                    {selectedSpecies.name}
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Species ({filteredData.length})</span>
+                    {selectedSpecies && (
+                      <Button variant="ghost" size="sm" onClick={clearSelection}>
+                        Clear
+                      </Button>
+                    )}
                   </CardTitle>
-                  <CardDescription className="italic">
-                    {selectedSpecies.scientificName}
-                  </CardDescription>
+                  <CardDescription>Click on a species to view on map</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant={
-                          selectedSpecies.status === "Protected"
-                            ? "destructive"
-                            : "secondary"
-                        }
+                <CardContent className="p-0">
+                  <div className="max-h-[600px] overflow-y-auto">
+                    {filteredData.map((species) => (
+                      <div
+                        key={species.id}
+                        className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
+                          selectedSpecies?.id === species.id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
+                        }`}
+                        onClick={() => handleSpeciesClick(species)}
                       >
-                        {selectedSpecies.status}
-                      </Badge>
-                      <Badge variant="outline" className="capitalize">
-                        {selectedSpecies.category}
-                      </Badge>
-                    </div>
-                    <p className="text-sm">{selectedSpecies.description}</p>
-                    <div className="grid grid-cols-1 gap-2 text-xs text-muted-foreground bg-muted p-3 rounded">
-                      <div>
-                        <span className="font-medium">Habitat:</span>{" "}
-                        {selectedSpecies.habitat}
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center gap-3">
+                            <species.icon className="h-5 w-5 text-gray-600" />
+                            <div>
+                              <h4 className="font-medium">{species.name}</h4>
+                              <p className="text-sm text-muted-foreground italic">{species.scientificName}</p>
+                              <p className="text-xs text-muted-foreground capitalize">{species.category}</p>
+                            </div>
+                          </div>
+                          <Badge
+                            variant={
+                              species.status === "Protected"
+                                ? "destructive"
+                                : species.status === "Ancient"
+                                  ? "default"
+                                  : "secondary"
+                            }
+                            className="text-xs"
+                          >
+                            {species.status}
+                          </Badge>
+                        </div>
                       </div>
-                      <div>
-                        <span className="font-medium">Last seen:</span>{" "}
-                        {selectedSpecies.lastSeen}
+                    ))}
+
+                    {filteredData.length === 0 && (
+                      <div className="flex flex-col items-center justify-center py-12">
+                        <Search className="h-12 w-12 text-muted-foreground mb-4" />
+                        <h3 className="font-medium mb-2">No species found</h3>
+                        <p className="text-sm text-muted-foreground text-center">
+                          Try adjusting your search terms or filters
+                        </p>
                       </div>
-                      <div>
-                        <span className="font-medium">Coordinates:</span>{" "}
-                        {selectedSpecies.coordinates.lat},{" "}
-                        {selectedSpecies.coordinates.lng}
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
-            )}
+            </div>
 
-            {!selectedSpecies && (
+            {/* Map and Details */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Map */}
               <Card>
-                <CardContent className="flex flex-col items-center justify-center py-8">
-                  <MapPin className="h-8 w-8 text-muted-foreground mb-2" />
-                  <h3 className="font-medium mb-1">Select a Species</h3>
-                  <p className="text-sm text-muted-foreground text-center">
-                    Click on a species from the list to view its location and
-                    habitat on the map
-                  </p>
+                <CardHeader>
+                  <CardTitle>Location Map</CardTitle>
+                  <CardDescription>
+                    {selectedSpecies
+                      ? `Showing habitat for ${selectedSpecies.name}`
+                      : "All species locations in the study area"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="h-[400px] w-full">
+                    <MapWithNoSSR selectedSpecies={selectedSpecies} allSpecies={wildlifeData} />
+                  </div>
                 </CardContent>
               </Card>
-            )}
+
+              {/* Species Details */}
+              {selectedSpecies && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3">
+                      <selectedSpecies.icon className="h-6 w-6" />
+                      <div>
+                        <div>{selectedSpecies.name}</div>
+                        <div className="text-sm font-normal text-muted-foreground italic">
+                          {selectedSpecies.scientificName}
+                        </div>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex gap-2">
+                        <Badge variant={selectedSpecies.status === "Protected" ? "destructive" : "secondary"}>
+                          {selectedSpecies.status}
+                        </Badge>
+                        <Badge variant="outline" className="capitalize">
+                          {selectedSpecies.category}
+                        </Badge>
+                      </div>
+
+                      <p className="text-sm leading-relaxed">{selectedSpecies.description}</p>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">Habitat</h4>
+                          <p className="text-sm text-muted-foreground">{selectedSpecies.habitat}</p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">Last Observed</h4>
+                          <p className="text-sm text-muted-foreground">{selectedSpecies.lastSeen}</p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">Coordinates</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedSpecies.coordinates.lat.toFixed(4)}, {selectedSpecies.coordinates.lng.toFixed(4)}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">Status</h4>
+                          <p className="text-sm text-muted-foreground">{selectedSpecies.status}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {!selectedSpecies && (
+                <Card>
+                  <CardContent className="flex flex-col items-center justify-center py-12">
+                    <MapPin className="h-12 w-12 text-muted-foreground mb-4" />
+                    <h3 className="font-medium mb-2">Select a Species</h3>
+                    <p className="text-sm text-muted-foreground text-center max-w-md">
+                      Choose a species from the list to view its location, habitat details, and additional information
+                      on the map
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

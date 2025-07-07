@@ -39,7 +39,6 @@ export default function StoryMapsPage() {
         <SidebarTrigger />
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold">ArcGIS Story Maps</h1>
-          <Badge variant="outline">Interactive Narratives</Badge>
         </div>
       </header>
 
