@@ -1,12 +1,15 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Plane, TreePine, BarChart3, BookOpen, Map, Shield } from "lucide-react"
+import { ArrowRight, Plane, TreePine, BarChart3, BookOpen, Map, Shield, ChevronDown, ChevronUp } from "lucide-react"
 import Link from "next/link"
 
 export default function LandingPage() {
+  const [showMoreInfo, setShowMoreInfo] = useState(false)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       {/* Hero Section */}
@@ -21,20 +24,38 @@ export default function LandingPage() {
               Advanced environmental monitoring and research platform for protected river ecosystems using UAV
               technology
             </p>
-            <div className="flex items-center justify-center gap-4">
-              <Badge variant="secondary" className="px-4 py-2">
-                <Plane className="h-4 w-4 mr-2" />
-                120+ UAV Flights
-              </Badge>
-              <Badge variant="secondary" className="px-4 py-2">
-                <TreePine className="h-4 w-4 mr-2" />
-                291 Species Identified
-              </Badge>
-              <Badge variant="secondary" className="px-4 py-2">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                18 Months Active
-              </Badge>
+            <p className="text-sm text-gray-500">
+              The renaturation project in this part of the river Aa started in August of 2012 and ended in the Summer of 2014.
+              The total cost amounts to about 1 million Euros, of which 80% was financed by the federal State of North Rhine-Westphalia and 20% by the city of Münster.
+            </p>
+            
+            {/* Continue Reading Button */}
+            <div className="mt-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowMoreInfo(!showMoreInfo)}
+                className="text-gray-600 hover:text-gray-800"
+              >
+                {showMoreInfo ? 'Show Less' : 'Continue Reading'}
+                {showMoreInfo ? <ChevronUp className="h-4 w-4 ml-1" /> : <ChevronDown className="h-4 w-4 ml-1" />}
+              </Button>
             </div>
+
+            {/* Expandable Content */}
+            {showMoreInfo && (
+              <div className="mt-4 space-y-3">
+                <p className="text-sm text-gray-500">
+                  The initial concept and planning phases for the restoration of the protected area that lies within a nature reserve began in 2011.
+                  The project was part of the larger "Renaturation of the River Aa" initiative, which aims to restore natural habitats and improve biodiversity along the river.
+                  The main objectives included water quality improvement of both the Aa and Aasee by re-establishing natural hydromorphology, enhanced flood protection through a wider and more sinuous channel design that reduces peak flows, and ecological enhancement through new riparian habitats with improved connectivity for flora and fauna.
+                </p>
+                <p className="text-sm text-gray-500">
+                  Completion was originally scheduled for summer to autumn 2013, with all major works wrapped up shortly thereafter. A key aspect of the project was increasing the gap and space between agriculturally used fields and the riverbed to create natural buffer zones.
+                  Other renaturation efforts along the Aa in Münster include a 210-meter section at Westerholtsche Wiese completed in 2018, a 320-meter section near Haus Coerde finished in 2010, and works at Hülshoffstraße, A1 & inner-city areas since 2012.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Feature Cards */}
