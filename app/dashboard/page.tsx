@@ -1,24 +1,17 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { MapPin } from "lucide-react";
-import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, ReferenceLine, Tooltip } from "recharts";
-import dynamic from "next/dynamic";
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { MapPin } from "lucide-react"
+import dynamic from "next/dynamic"
 
 const LiveWeather = dynamic(() => import("@/components/LiveWeather"), {
   ssr: false,
   loading: () => <div className="h-20 bg-gray-100 animate-pulse rounded" />,
-});
+})
 
 interface MeasurementPoint {
   lat: number
@@ -44,48 +37,46 @@ interface LeafletMapProps {
   height?: string
 }
 
-const LeafletMap = dynamic(
-  () => import("@/components/LeafletMap"),
-  {
-    ssr: false,
-    loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />,
-  }
-);
+const LeafletMap = dynamic(() => import("@/components/LeafletMap"), {
+  ssr: false,
+  loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />,
+})
 
-const flightData = [
-  { date: "Jan", flights: 12, coverage: 85 },
-  { date: "Feb", flights: 15, coverage: 92 },
-  { date: "Mar", flights: 18, coverage: 88 },
-  { date: "Apr", flights: 22, coverage: 95 },
-  { date: "May", flights: 25, coverage: 91 },
-  { date: "Jun", flights: 28, coverage: 97 },
-];
+// Remove these unused arrays
+// const flightData = [
+//   { date: "Jan", flights: 12, coverage: 85 },
+//   { date: "Feb", flights: 15, coverage: 92 },
+//   { date: "Mar", flights: 18, coverage: 88 },
+//   { date: "Apr", flights: 22, coverage: 95 },
+//   { date: "May", flights: 25, coverage: 91 },
+//   { date: "Jun", flights: 28, coverage: 97 },
+// ];
 
-const waterQualityData = [
-  { time: "13:15", ph: 7.8, oxygen: 8.44, temp: 18.8 }, // Station 1
-  { time: "13:37", ph: 8.0, oxygen: 8.55, temp: 18.4 }, // Station 2
-  { time: "14:00", ph: 8.0, oxygen: 8.79, temp: 19.6 }, // Station 3
-  { time: "14:18", ph: 7.9, oxygen: 8.41, temp: 18.6 }, // Station 6
-  { time: "14:35", ph: 8.2, oxygen: 8.34, temp: 18.5 }, // Station 7
-  { time: "14:55", ph: 8.2, oxygen: 8.3, temp: 18.8 }, // Station 8
-];
+// const waterQualityData = [
+//   { time: "13:15", ph: 7.8, oxygen: 8.44, temp: 18.8 }, // Station 1
+//   { time: "13:37", ph: 8.0, oxygen: 8.55, temp: 18.4 }, // Station 2
+//   { time: "14:00", ph: 8.0, oxygen: 8.79, temp: 19.6 }, // Station 3
+//   { time: "14:18", ph: 7.9, oxygen: 8.41, temp: 18.6 }, // Station 6
+//   { time: "14:35", ph: 8.2, oxygen: 8.34, temp: 18.5 }, // Station 7
+//   { time: "14:55", ph: 8.2, oxygen: 8.3, temp: 18.8 }, // Station 8
+// ];
 
 export default function Dashboard() {
-  const [currentTime, setCurrentTime] = useState("");
-  const [isClient, setIsClient] = useState(false);
-  const [activeDataset, setActiveDataset] = useState<"water" | "soil">("water");
+  const [currentTime, setCurrentTime] = useState("")
+  const [isClient, setIsClient] = useState(false)
+  const [activeDataset, setActiveDataset] = useState<"water" | "soil">("water")
 
   // Function to handle station selection using global popup function
   const handleStationSelection = (stationId: number) => {
-    console.log('Handling station selection for ID:', stationId);
-    
+    console.log("Handling station selection for ID:", stationId)
+
     // Use global function instead of React ref
-    if (typeof (window as any).openStationPopup === 'function') {
-      (window as any).openStationPopup(stationId);
+    if (typeof (window as any).openStationPopup === "function") {
+      ;(window as any).openStationPopup(stationId)
     } else {
-      console.warn('Global openStationPopup function is not available');
+      console.warn("Global openStationPopup function is not available")
     }
-  };
+  }
 
   // State für Survey-Bild - direkt das komprimierte Bild laden
   // const [surveyImageUrl] = useState<string>(
@@ -101,14 +92,14 @@ export default function Dashboard() {
 
   // Zeit nur im Client setzen (Hydration-Problem lösen)
   useEffect(() => {
-    setCurrentTime(new Date().toLocaleString());
-    setIsClient(true);
-  }, []);
+    setCurrentTime(new Date().toLocaleString())
+    setIsClient(true)
+  }, [])
 
   // Reset when dataset changes
   useEffect(() => {
-    console.log('Dataset changed to:', activeDataset);
-  }, [activeDataset]);
+    console.log("Dataset changed to:", activeDataset)
+  }, [activeDataset])
 
   // REAL measurement data from Excel table - WATER
   const waterMeasurementPoints = [
@@ -202,58 +193,370 @@ export default function Dashboard() {
       name: "Measurement Station 8",
       type: "Restored",
     },
-  ];
+  ]
 
   // SOIL measurement data from Excel table
   const soilMeasurementPoints = [
     // Non-restored points
-    { lat: 51.9461438, lon: 7.5703373, objectId: 1, temperature: 21.19, humidity: 63.36, soilMoisture: 12.41, restored: "n", name: "Soil Station 1", type: "Not restored" },
-    { lat: 51.9468261, lon: 7.5715349, objectId: 2, temperature: 21.06, humidity: 63.06, soilMoisture: 12.43, restored: "n", name: "Soil Station 2", type: "Not restored" },
-    { lat: 51.9464220, lon: 7.5716927, objectId: 3, temperature: 19.49, humidity: 62.76, soilMoisture: 12.51, restored: "n", name: "Soil Station 3", type: "Not restored" },
-    { lat: 51.9461344, lon: 7.5715772, objectId: 4, temperature: 18.86, humidity: 67.30, soilMoisture: 12.42, restored: "n", name: "Soil Station 4", type: "Not restored" },
-    { lat: 51.9448183, lon: 7.5731248, objectId: 21, temperature: 17.92, humidity: 71.47, soilMoisture: 12.14, restored: "n", name: "Soil Station 21", type: "Not restored" },
-    { lat: 51.9451206, lon: 7.5725664, objectId: 22, temperature: 18.08, humidity: 70.82, soilMoisture: 12.22, restored: "n", name: "Soil Station 22", type: "Not restored" },
-    { lat: 51.9451530, lon: 7.5716911, objectId: 23, temperature: 18.43, humidity: 68.34, soilMoisture: 11.75, restored: "n", name: "Soil Station 23", type: "Not restored" },
-    { lat: 51.9453003, lon: 7.5715979, objectId: 24, temperature: 19.30, humidity: 69.49, soilMoisture: 11.83, restored: "n", name: "Soil Station 24", type: "Not restored" },
-    { lat: 51.9454160, lon: 7.5713291, objectId: 25, temperature: 19.90, humidity: 66.36, soilMoisture: 11.88, restored: "n", name: "Soil Station 25", type: "Not restored" },
-    { lat: 51.9455570, lon: 7.5713674, objectId: 26, temperature: 20.99, humidity: 70.79, soilMoisture: 11.96, restored: "n", name: "Soil Station 26", type: "Not restored" },
-    { lat: 51.9456671, lon: 7.5713769, objectId: 27, temperature: 22.02, humidity: 68.10, soilMoisture: 11.96, restored: "n", name: "Soil Station 27", type: "Not restored" },
-    { lat: 51.9459548, lon: 7.5713928, objectId: 28, temperature: 24.03, humidity: 63.80, soilMoisture: 12.12, restored: "n", name: "Soil Station 28", type: "Not restored" },
-    { lat: 51.9464195, lon: 7.5714852, objectId: 29, temperature: 23.74, humidity: 66.90, soilMoisture: 12.46, restored: "n", name: "Soil Station 29", type: "Not restored" },
-    { lat: 51.9467840, lon: 7.5711248, objectId: 30, temperature: 23.11, humidity: 59.35, soilMoisture: 12.50, restored: "n", name: "Soil Station 30", type: "Not restored" },
-    { lat: 51.9469094, lon: 7.5713069, objectId: 31, temperature: 22.35, humidity: 59.05, soilMoisture: 12.65, restored: "n", name: "Soil Station 31", type: "Not restored" },
-    
-    // Restored points
-    { lat: 51.9454298, lon: 7.5718045, objectId: 5, temperature: 17.21, humidity: 68.96, soilMoisture: 12.17, restored: "y", name: "Soil Station 5", type: "Restored" },
-    { lat: 51.9453341, lon: 7.5724037, objectId: 6, temperature: 16.21, humidity: 76.94, soilMoisture: 12.05, restored: "y", name: "Soil Station 6", type: "Restored" },
-    { lat: 51.9436610, lon: 7.5749714, objectId: 7, temperature: 17.51, humidity: 76.33, soilMoisture: 11.53, restored: "y", name: "Soil Station 7", type: "Restored" },
-    { lat: 51.9431885, lon: 7.5750439, objectId: 8, temperature: 17.61, humidity: 80.26, soilMoisture: 11.67, restored: "y", name: "Soil Station 8", type: "Restored" },
-    { lat: 51.9415407, lon: 7.5767333, objectId: 9, temperature: 16.52, humidity: 75.55, soilMoisture: 11.60, restored: "y", name: "Soil Station 9", type: "Restored" },
-    { lat: 51.9441371, lon: 7.5733219, objectId: 10, temperature: 16.83, humidity: 74.16, soilMoisture: 12.03, restored: "y", name: "Soil Station 10", type: "Restored" },
-    { lat: 51.9436947, lon: 7.5738278, objectId: 11, temperature: 16.39, humidity: 76.95, soilMoisture: 11.68, restored: "y", name: "Soil Station 11", type: "Restored" },
-    { lat: 51.9437077, lon: 7.5742544, objectId: 12, temperature: 16.33, humidity: 76.50, soilMoisture: 12.03, restored: "y", name: "Soil Station 12", type: "Restored" },
-    { lat: 51.9427036, lon: 7.5750969, objectId: 13, temperature: 17.09, humidity: 77.49, soilMoisture: 11.79, restored: "y", name: "Soil Station 13", type: "Restored" },
-    { lat: 51.9423608, lon: 7.5757084, objectId: 14, temperature: 18.22, humidity: 76.24, soilMoisture: 11.71, restored: "y", name: "Soil Station 14", type: "Restored" },
-    { lat: 51.9421082, lon: 7.5756079, objectId: 15, temperature: 17.43, humidity: 80.73, soilMoisture: 11.87, restored: "y", name: "Soil Station 15", type: "Restored" },
-    { lat: 51.9417430, lon: 7.5764706, objectId: 16, temperature: 18.98, humidity: 72.38, soilMoisture: 12.19, restored: "y", name: "Soil Station 16", type: "Restored" },
-    { lat: 51.9415959, lon: 7.5767742, objectId: 17, temperature: 17.95, humidity: 75.26, soilMoisture: 12.03, restored: "y", name: "Soil Station 17", type: "Restored" },
-    { lat: 51.9414862, lon: 7.5764494, objectId: 18, temperature: 17.44, humidity: 75.67, soilMoisture: 12.10, restored: "y", name: "Soil Station 18", type: "Restored" },
-    { lat: 51.9442360, lon: 7.5728354, objectId: 19, temperature: 22.15, humidity: 59.99, soilMoisture: 12.40, restored: "y", name: "Soil Station 19", type: "Restored" },
-    { lat: 51.9445077, lon: 7.5729556, objectId: 20, temperature: 18.50, humidity: 68.61, soilMoisture: 12.31, restored: "y", name: "Soil Station 20", type: "Restored" }
-  ];
+    {
+      lat: 51.9461438,
+      lon: 7.5703373,
+      objectId: 1,
+      temperature: 21.19,
+      humidity: 63.36,
+      soilMoisture: 12.41,
+      restored: "n",
+      name: "Soil Station 1",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9468261,
+      lon: 7.5715349,
+      objectId: 2,
+      temperature: 21.06,
+      humidity: 63.06,
+      soilMoisture: 12.43,
+      restored: "n",
+      name: "Soil Station 2",
+      type: "Not restored",
+    },
+    {
+      lat: 51.946422,
+      lon: 7.5716927,
+      objectId: 3,
+      temperature: 19.49,
+      humidity: 62.76,
+      soilMoisture: 12.51,
+      restored: "n",
+      name: "Soil Station 3",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9461344,
+      lon: 7.5715772,
+      objectId: 4,
+      temperature: 18.86,
+      humidity: 67.3,
+      soilMoisture: 12.42,
+      restored: "n",
+      name: "Soil Station 4",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9448183,
+      lon: 7.5731248,
+      objectId: 21,
+      temperature: 17.92,
+      humidity: 71.47,
+      soilMoisture: 12.14,
+      restored: "n",
+      name: "Soil Station 21",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9451206,
+      lon: 7.5725664,
+      objectId: 22,
+      temperature: 18.08,
+      humidity: 70.82,
+      soilMoisture: 12.22,
+      restored: "n",
+      name: "Soil Station 22",
+      type: "Not restored",
+    },
+    {
+      lat: 51.945153,
+      lon: 7.5716911,
+      objectId: 23,
+      temperature: 18.43,
+      humidity: 68.34,
+      soilMoisture: 11.75,
+      restored: "n",
+      name: "Soil Station 23",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9453003,
+      lon: 7.5715979,
+      objectId: 24,
+      temperature: 19.3,
+      humidity: 69.49,
+      soilMoisture: 11.83,
+      restored: "n",
+      name: "Soil Station 24",
+      type: "Not restored",
+    },
+    {
+      lat: 51.945416,
+      lon: 7.5713291,
+      objectId: 25,
+      temperature: 19.9,
+      humidity: 66.36,
+      soilMoisture: 11.88,
+      restored: "n",
+      name: "Soil Station 25",
+      type: "Not restored",
+    },
+    {
+      lat: 51.945557,
+      lon: 7.5713674,
+      objectId: 26,
+      temperature: 20.99,
+      humidity: 70.79,
+      soilMoisture: 11.96,
+      restored: "n",
+      name: "Soil Station 26",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9456671,
+      lon: 7.5713769,
+      objectId: 27,
+      temperature: 22.02,
+      humidity: 68.1,
+      soilMoisture: 11.96,
+      restored: "n",
+      name: "Soil Station 27",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9459548,
+      lon: 7.5713928,
+      objectId: 28,
+      temperature: 24.03,
+      humidity: 63.8,
+      soilMoisture: 12.12,
+      restored: "n",
+      name: "Soil Station 28",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9464195,
+      lon: 7.5714852,
+      objectId: 29,
+      temperature: 23.74,
+      humidity: 66.9,
+      soilMoisture: 12.46,
+      restored: "n",
+      name: "Soil Station 29",
+      type: "Not restored",
+    },
+    {
+      lat: 51.946784,
+      lon: 7.5711248,
+      objectId: 30,
+      temperature: 23.11,
+      humidity: 59.35,
+      soilMoisture: 12.5,
+      restored: "n",
+      name: "Soil Station 30",
+      type: "Not restored",
+    },
+    {
+      lat: 51.9469094,
+      lon: 7.5713069,
+      objectId: 31,
+      temperature: 22.35,
+      humidity: 59.05,
+      soilMoisture: 12.65,
+      restored: "n",
+      name: "Soil Station 31",
+      type: "Not restored",
+    },
 
-  const measurementPoints = activeDataset === "water" ? waterMeasurementPoints : soilMeasurementPoints;
+    // Restored points
+    {
+      lat: 51.9454298,
+      lon: 7.5718045,
+      objectId: 5,
+      temperature: 17.21,
+      humidity: 68.96,
+      soilMoisture: 12.17,
+      restored: "y",
+      name: "Soil Station 5",
+      type: "Restored",
+    },
+    {
+      lat: 51.9453341,
+      lon: 7.5724037,
+      objectId: 6,
+      temperature: 16.21,
+      humidity: 76.94,
+      soilMoisture: 12.05,
+      restored: "y",
+      name: "Soil Station 6",
+      type: "Restored",
+    },
+    {
+      lat: 51.943661,
+      lon: 7.5749714,
+      objectId: 7,
+      temperature: 17.51,
+      humidity: 76.33,
+      soilMoisture: 11.53,
+      restored: "y",
+      name: "Soil Station 7",
+      type: "Restored",
+    },
+    {
+      lat: 51.9431885,
+      lon: 7.5750439,
+      objectId: 8,
+      temperature: 17.61,
+      humidity: 80.26,
+      soilMoisture: 11.67,
+      restored: "y",
+      name: "Soil Station 8",
+      type: "Restored",
+    },
+    {
+      lat: 51.9415407,
+      lon: 7.5767333,
+      objectId: 9,
+      temperature: 16.52,
+      humidity: 75.55,
+      soilMoisture: 11.6,
+      restored: "y",
+      name: "Soil Station 9",
+      type: "Restored",
+    },
+    {
+      lat: 51.9441371,
+      lon: 7.5733219,
+      objectId: 10,
+      temperature: 16.83,
+      humidity: 74.16,
+      soilMoisture: 12.03,
+      restored: "y",
+      name: "Soil Station 10",
+      type: "Restored",
+    },
+    {
+      lat: 51.9436947,
+      lon: 7.5738278,
+      objectId: 11,
+      temperature: 16.39,
+      humidity: 76.95,
+      soilMoisture: 11.68,
+      restored: "y",
+      name: "Soil Station 11",
+      type: "Restored",
+    },
+    {
+      lat: 51.9437077,
+      lon: 7.5742544,
+      objectId: 12,
+      temperature: 16.33,
+      humidity: 76.5,
+      soilMoisture: 12.03,
+      restored: "y",
+      name: "Soil Station 12",
+      type: "Restored",
+    },
+    {
+      lat: 51.9427036,
+      lon: 7.5750969,
+      objectId: 13,
+      temperature: 17.09,
+      humidity: 77.49,
+      soilMoisture: 11.79,
+      restored: "y",
+      name: "Soil Station 13",
+      type: "Restored",
+    },
+    {
+      lat: 51.9423608,
+      lon: 7.5757084,
+      objectId: 14,
+      temperature: 18.22,
+      humidity: 76.24,
+      soilMoisture: 11.71,
+      restored: "y",
+      name: "Soil Station 14",
+      type: "Restored",
+    },
+    {
+      lat: 51.9421082,
+      lon: 7.5756079,
+      objectId: 15,
+      temperature: 17.43,
+      humidity: 80.73,
+      soilMoisture: 11.87,
+      restored: "y",
+      name: "Soil Station 15",
+      type: "Restored",
+    },
+    {
+      lat: 51.941743,
+      lon: 7.5764706,
+      objectId: 16,
+      temperature: 18.98,
+      humidity: 72.38,
+      soilMoisture: 12.19,
+      restored: "y",
+      name: "Soil Station 16",
+      type: "Restored",
+    },
+    {
+      lat: 51.9415959,
+      lon: 7.5767742,
+      objectId: 17,
+      temperature: 17.95,
+      humidity: 75.26,
+      soilMoisture: 12.03,
+      restored: "y",
+      name: "Soil Station 17",
+      type: "Restored",
+    },
+    {
+      lat: 51.9414862,
+      lon: 7.5764494,
+      objectId: 18,
+      temperature: 17.44,
+      humidity: 75.67,
+      soilMoisture: 12.1,
+      restored: "y",
+      name: "Soil Station 18",
+      type: "Restored",
+    },
+    {
+      lat: 51.944236,
+      lon: 7.5728354,
+      objectId: 19,
+      temperature: 22.15,
+      humidity: 59.99,
+      soilMoisture: 12.4,
+      restored: "y",
+      name: "Soil Station 19",
+      type: "Restored",
+    },
+    {
+      lat: 51.9445077,
+      lon: 7.5729556,
+      objectId: 20,
+      temperature: 18.5,
+      humidity: 68.61,
+      soilMoisture: 12.31,
+      restored: "y",
+      name: "Soil Station 20",
+      type: "Restored",
+    },
+  ]
+
+  const measurementPoints = activeDataset === "water" ? waterMeasurementPoints : soilMeasurementPoints
 
   // Calculate statistics for active dataset
   const calculateStats = () => {
-    const restored = measurementPoints.filter(p => p.restored === "y");
-    const nonRestored = measurementPoints.filter(p => p.restored === "n");
-    
+    const restored = measurementPoints.filter((p) => p.restored === "y")
+    const nonRestored = measurementPoints.filter((p) => p.restored === "n")
+
     if (activeDataset === "water") {
       return {
         temperature: {
           restored: (restored.reduce((sum, p) => sum + (p as any).temperature, 0) / restored.length).toFixed(1),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) / nonRestored.length).toFixed(1),
+          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) / nonRestored.length).toFixed(
+            1,
+          ),
         },
         oxygen: {
           restored: (restored.reduce((sum, p) => sum + (p as any).oxygen, 0) / restored.length).toFixed(2),
@@ -265,22 +568,28 @@ export default function Dashboard() {
         },
         conductivity: {
           restored: Math.round(restored.reduce((sum, p) => sum + (p as any).conductivity, 0) / restored.length),
-          nonRestored: Math.round(nonRestored.reduce((sum, p) => sum + (p as any).conductivity, 0) / nonRestored.length),
+          nonRestored: Math.round(
+            nonRestored.reduce((sum, p) => sum + (p as any).conductivity, 0) / nonRestored.length,
+          ),
         },
         species: {
           restored: (restored.reduce((sum, p) => sum + (p as any).numberOfSpecies, 0) / restored.length).toFixed(1),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).numberOfSpecies, 0) / nonRestored.length).toFixed(1),
+          nonRestored: (
+            nonRestored.reduce((sum, p) => sum + (p as any).numberOfSpecies, 0) / nonRestored.length
+          ).toFixed(1),
         },
         flow: {
           restored: "7.4 cm/s", // Average of 9.1 and 5.6
           nonRestored: "n/a",
-        }
-      };
+        },
+      }
     } else {
       return {
         temperature: {
           restored: (restored.reduce((sum, p) => sum + (p as any).temperature, 0) / restored.length).toFixed(1),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) / nonRestored.length).toFixed(1),
+          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) / nonRestored.length).toFixed(
+            1,
+          ),
         },
         humidity: {
           restored: (restored.reduce((sum, p) => sum + (p as any).humidity, 0) / restored.length).toFixed(1),
@@ -288,25 +597,27 @@ export default function Dashboard() {
         },
         soilMoisture: {
           restored: (restored.reduce((sum, p) => sum + (p as any).soilMoisture, 0) / restored.length).toFixed(2),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).soilMoisture, 0) / nonRestored.length).toFixed(2),
+          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).soilMoisture, 0) / nonRestored.length).toFixed(
+            2,
+          ),
         },
         humidityRange: {
-          restored: `${Math.min(...restored.map(p => (p as any).humidity)).toFixed(1)}-${Math.max(...restored.map(p => (p as any).humidity)).toFixed(1)}%`,
-          nonRestored: `${Math.min(...nonRestored.map(p => (p as any).humidity)).toFixed(1)}-${Math.max(...nonRestored.map(p => (p as any).humidity)).toFixed(1)}%`,
+          restored: `${Math.min(...restored.map((p) => (p as any).humidity)).toFixed(1)}-${Math.max(...restored.map((p) => (p as any).humidity)).toFixed(1)}%`,
+          nonRestored: `${Math.min(...nonRestored.map((p) => (p as any).humidity)).toFixed(1)}-${Math.max(...nonRestored.map((p) => (p as any).humidity)).toFixed(1)}%`,
         },
         tempRange: {
-          restored: `${Math.min(...restored.map(p => (p as any).temperature)).toFixed(1)}-${Math.max(...restored.map(p => (p as any).temperature)).toFixed(1)}°C`,
-          nonRestored: `${Math.min(...nonRestored.map(p => (p as any).temperature)).toFixed(1)}-${Math.max(...nonRestored.map(p => (p as any).temperature)).toFixed(1)}°C`,
+          restored: `${Math.min(...restored.map((p) => (p as any).temperature)).toFixed(1)}-${Math.max(...restored.map((p) => (p as any).temperature)).toFixed(1)}°C`,
+          nonRestored: `${Math.min(...nonRestored.map((p) => (p as any).temperature)).toFixed(1)}-${Math.max(...nonRestored.map((p) => (p as any).temperature)).toFixed(1)}°C`,
         },
         count: {
           restored: restored.length,
           nonRestored: nonRestored.length,
-        }
-      };
+        },
+      }
     }
-  };
+  }
 
-  const stats = calculateStats();
+  const stats = calculateStats()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -344,7 +655,7 @@ export default function Dashboard() {
           {/* Right Sidebar - Live Weather and Dataset Toggle */}
           <div className="lg:col-span-3 space-y-6">
             <LiveWeather />
-            
+
             {/* Toggle Button for Dataset Selection */}
             <div className="flex justify-center">
               <div className="bg-white rounded-lg p-1 shadow-sm border w-full">
@@ -368,11 +679,11 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            
+
             {/* LAWA Information Link */}
             <div className="text-center">
-              <a 
-                href="#" 
+              <a
+                href="#"
                 className="text-xs text-gray-400 hover:text-gray-500 underline cursor-not-allowed"
                 onClick={(e) => e.preventDefault()}
               >
@@ -406,34 +717,38 @@ export default function Dashboard() {
                       <div className="text-lg font-bold text-red-600">3</div>
                     </div>
                   </div>
-                  
+
                   {/* Compact station selection */}
                   <div className="space-y-2">
                     <div className="text-xs text-gray-600">Select Station:</div>
-                    <select 
+                    <select
                       className="w-full text-xs p-1 border rounded bg-white"
                       onChange={(e) => {
                         if (e.target.value) {
-                          const stationId = parseInt(e.target.value);
-                          handleStationSelection(stationId);
-                          e.target.value = ''; // Reset selection
+                          const stationId = Number.parseInt(e.target.value)
+                          handleStationSelection(stationId)
+                          e.target.value = "" // Reset selection
                         }
                       }}
                     >
                       <option value="">Choose station...</option>
                       <optgroup label="Restored (3)">
-                        {waterMeasurementPoints.filter(p => p.restored === "y").map(point => (
-                          <option key={point.objectId} value={point.objectId}>
-                            Station {point.objectId}
-                          </option>
-                        ))}
+                        {waterMeasurementPoints
+                          .filter((p) => p.restored === "y")
+                          .map((point) => (
+                            <option key={point.objectId} value={point.objectId}>
+                              Station {point.objectId}
+                            </option>
+                          ))}
                       </optgroup>
                       <optgroup label="Non-Restored (3)">
-                        {waterMeasurementPoints.filter(p => p.restored === "n").map(point => (
-                          <option key={point.objectId} value={point.objectId}>
-                            Station {point.objectId}
-                          </option>
-                        ))}
+                        {waterMeasurementPoints
+                          .filter((p) => p.restored === "n")
+                          .map((point) => (
+                            <option key={point.objectId} value={point.objectId}>
+                              Station {point.objectId}
+                            </option>
+                          ))}
                       </optgroup>
                     </select>
                   </div>
@@ -456,7 +771,7 @@ export default function Dashboard() {
                     <span className="text-xs">Non-Restored:</span>
                     <span className="font-bold text-red-600">{stats.oxygen?.nonRestored} mg/L</span>
                   </div>
-                  
+
                   {/* Simple bar with markers and axis labels */}
                   <div className="relative mt-4">
                     {/* Axis labels */}
@@ -464,35 +779,45 @@ export default function Dashboard() {
                       <span>7.0</span>
                       <span>10.0 mg/L</span>
                     </div>
-                    
+
                     {/* Bar with LAWA range highlight */}
                     <div className="relative h-4 bg-gray-200 rounded">
                       {/* LAWA range background (9 mg/L and above) */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 bg-blue-100 rounded-r"
-                        style={{ 
+                        style={{
                           left: `${Math.max(0, ((9 - 7) / 3) * 100)}%`,
-                          width: `${100 - Math.max(0, ((9 - 7) / 3) * 100)}%`
+                          width: `${100 - Math.max(0, ((9 - 7) / 3) * 100)}%`,
                         }}
                       ></div>
-                      
+
                       {/* Tick marks under the bar for every unit (8.0, 9.0) */}
-                      <div className="absolute top-4 w-px h-0.5 bg-gray-200" style={{ left: `${((8 - 7) / 3) * 100}%` }}></div>
-                      <div className="absolute top-4 w-px h-0.5 bg-gray-200" style={{ left: `${((9 - 7) / 3) * 100}%` }}></div>
-                      
+                      <div
+                        className="absolute top-4 w-px h-0.5 bg-gray-200"
+                        style={{ left: `${((8 - 7) / 3) * 100}%` }}
+                      ></div>
+                      <div
+                        className="absolute top-4 w-px h-0.5 bg-gray-200"
+                        style={{ left: `${((9 - 7) / 3) * 100}%` }}
+                      ></div>
+
                       {/* Green marker for Restored */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 w-0.5 bg-green-600 z-10"
-                        style={{ left: `${Math.min(95, Math.max(5, ((parseFloat(stats.oxygen?.restored || '0') - 7) / 3) * 100))}%` }}
+                        style={{
+                          left: `${Math.min(95, Math.max(5, ((Number.parseFloat(stats.oxygen?.restored || "0") - 7) / 3) * 100))}%`,
+                        }}
                       >
                         <div className="absolute -top-2 left-0 w-0.5 h-2 bg-green-600"></div>
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-green-600"></div>
                       </div>
-                      
+
                       {/* Red marker for Non-Restored */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 w-0.5 bg-red-600 z-10"
-                        style={{ left: `${Math.min(95, Math.max(5, ((parseFloat(stats.oxygen?.nonRestored || '0') - 7) / 3) * 100))}%` }}
+                        style={{
+                          left: `${Math.min(95, Math.max(5, ((Number.parseFloat(stats.oxygen?.nonRestored || "0") - 7) / 3) * 100))}%`,
+                        }}
                       >
                         <div className="absolute -top-2 left-0 w-0.5 h-2 bg-red-600"></div>
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-red-600"></div>
@@ -518,7 +843,7 @@ export default function Dashboard() {
                     <span className="text-xs">Non-Restored:</span>
                     <span className="font-bold text-red-600">{stats.temperature?.nonRestored}°C</span>
                   </div>
-                  
+
                   {/* Simple bar with markers and axis labels */}
                   <div className="relative mt-4">
                     {/* Axis labels */}
@@ -526,42 +851,50 @@ export default function Dashboard() {
                       <span>16.0</span>
                       <span>26.0°C</span>
                     </div>
-                    
+
                     {/* Bar with LAWA range highlight */}
                     <div className="relative h-4 bg-gray-200 rounded">
                       {/* LAWA range background (19-24°C) */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 bg-blue-100 rounded"
-                        style={{ 
+                        style={{
                           left: `${Math.max(0, ((19 - 16) / 10) * 100)}%`,
-                          width: `${Math.min(100, ((24 - 19) / 10) * 100)}%`
+                          width: `${Math.min(100, ((24 - 19) / 10) * 100)}%`,
                         }}
                       ></div>
-                      
+
                       {/* Tick marks for every unit (17, 18, 19, 20, 21, 22, 23, 24, 25) */}
-                      {[17, 18, 19, 20, 21, 22, 23, 24, 25].map(temp => (
-                        <div key={temp} className="absolute top-4 w-px h-0.5 bg-gray-200" style={{ left: `${((temp - 16) / 10) * 100}%` }}></div>
+                      {[17, 18, 19, 20, 21, 22, 23, 24, 25].map((temp) => (
+                        <div
+                          key={temp}
+                          className="absolute top-4 w-px h-0.5 bg-gray-200"
+                          style={{ left: `${((temp - 16) / 10) * 100}%` }}
+                        ></div>
                       ))}
-                      
+
                       {/* Green marker - Restored */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 w-0.5 bg-green-600 z-10"
-                        style={{ left: `${Math.min(95, Math.max(5, ((parseFloat(stats.temperature?.restored || '0') - 16) / 10) * 100))}%` }}
+                        style={{
+                          left: `${Math.min(95, Math.max(5, ((Number.parseFloat(stats.temperature?.restored || "0") - 16) / 10) * 100))}%`,
+                        }}
                       >
                         <div className="absolute -top-2 left-0 w-0.5 h-2 bg-green-600"></div>
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-green-600"></div>
                       </div>
-                      
+
                       {/* Red marker - Non-Restored */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 w-0.5 bg-red-600 z-10"
-                        style={{ left: `${Math.min(95, Math.max(5, ((parseFloat(stats.temperature?.nonRestored || '0') - 16) / 10) * 100))}%` }}
+                        style={{
+                          left: `${Math.min(95, Math.max(5, ((Number.parseFloat(stats.temperature?.nonRestored || "0") - 16) / 10) * 100))}%`,
+                        }}
                       >
                         <div className="absolute -top-2 left-0 w-0.5 h-2 bg-red-600"></div>
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-red-600"></div>
                       </div>
                     </div>
-                    
+
                     {/* LAWA range labels */}
                   </div>
                 </div>
@@ -584,7 +917,7 @@ export default function Dashboard() {
                     <span className="text-xs">Non-Restored:</span>
                     <span className="font-bold text-red-600">{stats.pH?.nonRestored}</span>
                   </div>
-                  
+
                   {/* Simple bar with markers and axis labels */}
                   <div className="relative mt-4">
                     {/* Axis labels */}
@@ -592,41 +925,51 @@ export default function Dashboard() {
                       <span>6.5</span>
                       <span>9.0 pH</span>
                     </div>
-                    
+
                     {/* Bar with LAWA range highlight */}
                     <div className="relative h-4 bg-gray-200 rounded">
                       {/* LAWA range background (7.0-8.5) */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 bg-blue-100 rounded"
-                        style={{ 
+                        style={{
                           left: `${Math.max(0, ((7.0 - 6.5) / 2.5) * 100)}%`,
-                          width: `${Math.min(100, ((8.5 - 7.0) / 2.5) * 100)}%`
+                          width: `${Math.min(100, ((8.5 - 7.0) / 2.5) * 100)}%`,
                         }}
                       ></div>
-                      
+
                       {/* Tick marks for every unit (7.0, 8.0) */}
-                      <div className="absolute top-4 w-px h-0.5 bg-gray-200" style={{ left: `${((7.0 - 6.5) / 2.5) * 100}%` }}></div>
-                      <div className="absolute top-4 w-px h-0.5 bg-gray-200" style={{ left: `${((8.0 - 6.5) / 2.5) * 100}%` }}></div>
-                      
+                      <div
+                        className="absolute top-4 w-px h-0.5 bg-gray-200"
+                        style={{ left: `${((7.0 - 6.5) / 2.5) * 100}%` }}
+                      ></div>
+                      <div
+                        className="absolute top-4 w-px h-0.5 bg-gray-200"
+                        style={{ left: `${((8.0 - 6.5) / 2.5) * 100}%` }}
+                      ></div>
+
                       {/* Green marker - Restored */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 w-0.5 bg-green-600 z-10"
-                        style={{ left: `${Math.min(95, Math.max(5, ((parseFloat(stats.pH?.restored || '0') - 6.5) / 2.5) * 100))}%` }}
+                        style={{
+                          left: `${Math.min(95, Math.max(5, ((Number.parseFloat(stats.pH?.restored || "0") - 6.5) / 2.5) * 100))}%`,
+                        }}
                       >
                         <div className="absolute -top-2 left-0 w-0.5 h-2 bg-green-600"></div>
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-green-600"></div>
                       </div>
-                      
+
                       {/* Red marker - Non-Restored */}
-                      <div 
+                      <div
                         className="absolute top-0 bottom-0 w-0.5 bg-red-600 z-10"
-                        style={{ left: `${Math.min(95, Math.max(5, ((parseFloat(stats.pH?.nonRestored || '0') - 6.5) / 2.5) * 100))}%` }}
+                        style={{
+                          left: `${Math.min(95, Math.max(5, ((Number.parseFloat(stats.pH?.nonRestored || "0") - 6.5) / 2.5) * 100))}%`,
+                        }}
                       >
                         <div className="absolute -top-2 left-0 w-0.5 h-2 bg-red-600"></div>
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-red-600"></div>
                       </div>
                     </div>
-                    
+
                     {/* LAWA range labels */}
                   </div>
                 </div>
@@ -692,34 +1035,38 @@ export default function Dashboard() {
                       <div className="text-lg font-bold text-red-600">15</div>
                     </div>
                   </div>
-                  
+
                   {/* Compact station selection */}
                   <div className="space-y-2">
                     <div className="text-xs text-gray-600">Select Station:</div>
-                    <select 
+                    <select
                       className="w-full text-xs p-1 border rounded bg-white"
                       onChange={(e) => {
                         if (e.target.value) {
-                          const stationId = parseInt(e.target.value);
-                          handleStationSelection(stationId);
-                          e.target.value = ''; // Reset selection
+                          const stationId = Number.parseInt(e.target.value)
+                          handleStationSelection(stationId)
+                          e.target.value = "" // Reset selection
                         }
                       }}
                     >
                       <option value="">Choose station...</option>
                       <optgroup label="Restored (16)">
-                        {soilMeasurementPoints.filter(p => p.restored === "y").map(point => (
-                          <option key={point.objectId} value={point.objectId}>
-                            Station {point.objectId}
-                          </option>
-                        ))}
+                        {soilMeasurementPoints
+                          .filter((p) => p.restored === "y")
+                          .map((point) => (
+                            <option key={point.objectId} value={point.objectId}>
+                              Station {point.objectId}
+                            </option>
+                          ))}
                       </optgroup>
                       <optgroup label="Non-Restored (15)">
-                        {soilMeasurementPoints.filter(p => p.restored === "n").map(point => (
-                          <option key={point.objectId} value={point.objectId}>
-                            Station {point.objectId}
-                          </option>
-                        ))}
+                        {soilMeasurementPoints
+                          .filter((p) => p.restored === "n")
+                          .map((point) => (
+                            <option key={point.objectId} value={point.objectId}>
+                              Station {point.objectId}
+                            </option>
+                          ))}
                       </optgroup>
                     </select>
                   </div>
@@ -784,5 +1131,5 @@ export default function Dashboard() {
         )}
       </div>
     </div>
-  );
+  )
 }

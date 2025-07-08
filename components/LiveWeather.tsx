@@ -1,48 +1,65 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Thermometer, Wind, Droplets, Gauge, Eye, MapPin } from "lucide-react";
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Thermometer, Wind, Droplets, Gauge, MapPin } from "lucide-react"
 
 interface WeatherData {
-  temperature: number;
-  feels_like: number;
-  humidity: number;
-  pressure: number;
-  visibility: number;
-  wind_speed: number;
-  wind_direction: number;
-  description: string;
-  icon: string;
-  location: string;
-  last_updated: string;
+  temperature: number
+  feels_like: number
+  humidity: number
+  pressure: number
+  visibility: number
+  wind_speed: number
+  wind_direction: number
+  description: string
+  icon: string
+  location: string
+  last_updated: string
 }
 
 export default function LiveWeather() {
-  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchWeatherData = async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setLoading(true)
+      setError(null)
 
       // Coordinates for Münster Sentrup
-      const LAT = 51.945028;
-      const LON = 7.572704;
-      const API_KEY =
-        process.env.OPENWEATHER_API_KEY || "22c7a033180b14d031ae66ad64f220a7";
+      const LAT = 51.945028
+      const LON = 7.572704
+      const API_KEY = "22c7a033180b14d031ae66ad64f220a7" // Demo API key
 
       const response = await fetch(
-        `/api/weather?lat=${LAT}&lon=${LON}&apiKey=${API_KEY}`,
-      );
+        `https://api.openweathermap.org/data/2.5/weather?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=metric`,
+        {
+          headers: {
+            "User-Agent": "IfG-UAVs Dashboard/1.0",
+          },
+        },
+      )
 
       if (!response.ok) {
-        throw new Error(`Weather API error: ${response.statusText}`);
+        const errorData = await response.json().catch(() => ({}))
+
+        if (response.status === 401) {
+          throw new Error("Invalid API key - Check your OpenWeatherMap API key")
+        } else if (response.status === 429) {
+          throw new Error("Rate limit exceeded - Too many requests")
+        } else {
+          throw new Error(errorData.message || response.statusText)
+        }
       }
 
-      const data = await response.json();
+      const data = await response.json()
+
+      // Validate response data
+      if (!data.main || !data.weather) {
+        throw new Error("Invalid weather data received from API")
+      }
 
       setWeatherData({
         temperature: Math.round(data.main.temp),
@@ -59,25 +76,23 @@ export default function LiveWeather() {
           hour: "2-digit",
           minute: "2-digit",
         }),
-      });
+      })
     } catch (err) {
-      console.error("Weather fetch error:", err);
-      setError(
-        err instanceof Error ? err.message : "Failed to load weather data",
-      );
+      console.error("Weather fetch error:", err)
+      setError(err instanceof Error ? err.message : "Failed to load weather data")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchWeatherData();
+    fetchWeatherData()
 
     // Update weather every 10 minutes
-    const interval = setInterval(fetchWeatherData, 10 * 60 * 1000);
+    const interval = setInterval(fetchWeatherData, 10 * 60 * 1000)
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval)
+  }, [])
 
   if (loading) {
     return (
@@ -94,7 +109,7 @@ export default function LiveWeather() {
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   if (error) {
@@ -113,10 +128,10 @@ export default function LiveWeather() {
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
-  if (!weatherData) return null;
+  if (!weatherData) return null
 
   return (
     <Card>
@@ -138,12 +153,8 @@ export default function LiveWeather() {
                 className="w-8 h-8"
               />
               <div>
-                <div className="text-2xl font-bold text-blue-600">
-                  {weatherData.temperature}°C
-                </div>
-                <div className="text-xs text-gray-500 capitalize">
-                  {weatherData.description}
-                </div>
+                <div className="text-2xl font-bold text-blue-600">{weatherData.temperature}°C</div>
+                <div className="text-xs text-gray-500 capitalize">{weatherData.description}</div>
               </div>
             </div>
           </div>
@@ -180,5 +191,5 @@ export default function LiveWeather() {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
