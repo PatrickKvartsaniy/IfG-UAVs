@@ -43,6 +43,12 @@ const tools = [
     version: "3.2",
     url: "https://www.esri.com/en-us/arcgis/products/arcgis-pro",
   },
+    {
+    name: "ArcGIS Online",
+    description:
+      "Geographic Information System for cloud-based spatial analysis and mapping",
+    url: "https://www.esri.com/en-us/arcgis/products/arcgis-online",
+  },
   {
     name: "QGIS",
     description: "Open-source Geographic Information System",
@@ -55,6 +61,21 @@ const tools = [
     version: "3.11",
     url: "https://www.python.org/",
   },
+  {
+    name: "TypeScript",
+    description: "Superset of JavaScript for building applications",
+    version: "4.9",
+  },
+  {
+    name: "Next.js",
+    description: "React framework for building server-rendered applications",
+    version: "14.4",
+    url: "https://nextjs.org/",
+  },
+  {
+    name: "Leaflet",
+    description: "JavaScript library for interactive maps",
+  }
 ];
 
 export default function ReferencesPage() {
@@ -163,33 +184,21 @@ export default function ReferencesPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                <div>
-                  <p className="font-medium">FAIR Data Principles</p>
-                  <p className="text-sm text-muted-foreground">
-                    Findable, Accessible, Interoperable, and Reusable data
-                    management practices
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                <div>
-                  <p className="font-medium">
-                    IUCN Red List Categories and Criteria
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Global standard for assessing the extinction risk of species
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
                 <div>
                   <p className="font-medium">Water Framework Directive (WFD)</p>
                   <p className="text-sm text-muted-foreground">
                     European legislation for water quality assessment and
                     management
+                  </p>
+                </div>
+              </div>
+                <div className="flex items-start gap-3">
+                <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                <div>
+                  <p className="font-medium">LAWA (Länderarbeitsgemeinschaft Wasser)</p>
+                  <p className="text-sm text-muted-foreground">
+                    RaKon Teil B – Arbeitspapier II: Hintergrund- und Orientierungswerte für physikalisch-chemische Qualitätskomponenten in Fließgewässern.
                   </p>
                 </div>
               </div>
