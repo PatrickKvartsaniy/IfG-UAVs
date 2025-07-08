@@ -1,69 +1,75 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { MapPin, Thermometer, Droplets, Gauge } from "lucide-react"
-import dynamic from "next/dynamic"
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { MapPin, Thermometer, Droplets, Gauge } from "lucide-react";
+import dynamic from "next/dynamic";
 
 const LiveWeather = dynamic(() => import("@/components/LiveWeather"), {
   ssr: false,
   loading: () => <div className="h-20 bg-gray-100 animate-pulse rounded" />,
-})
+});
 
 interface MeasurementPoint {
-  lat: number
-  lon: number
-  name: string
-  value?: number
-  type?: string
-  objectId?: number
-  creationDate?: string
-  numberOfSpecies?: number
-  oxygen?: number
-  temperature?: number
-  pH?: number
-  conductivity?: number
-  flowVelocity?: number | string
-  restored?: string
-  humidity?: number
-  soilMoisture?: number
+  lat: number;
+  lon: number;
+  name: string;
+  value?: number;
+  type?: string;
+  objectId?: number;
+  creationDate?: string;
+  numberOfSpecies?: number;
+  oxygen?: number;
+  temperature?: number;
+  pH?: number;
+  conductivity?: number;
+  flowVelocity?: number | string;
+  restored?: string;
+  humidity?: number;
+  soilMoisture?: number;
 }
 
 const LeafletMap = dynamic(() => import("@/components/LeafletMap"), {
   ssr: false,
   loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />,
-})
+});
 
 export default function Dashboard() {
-  const [currentTime, setCurrentTime] = useState("")
-  const [isClient, setIsClient] = useState(false)
-  const [activeDataset, setActiveDataset] = useState<"water" | "soil">("water")
+  const [currentTime, setCurrentTime] = useState("");
+  const [isClient, setIsClient] = useState(false);
+  const [activeDataset, setActiveDataset] = useState<"water" | "soil">("water");
 
   // Function to handle station selection using global popup function
   const handleStationSelection = (stationId: number) => {
-    console.log("Handling station selection for ID:", stationId)
+    console.log("Handling station selection for ID:", stationId);
 
     // Use global function instead of React ref
     if (typeof (window as any).openStationPopup === "function") {
-      ;(window as any).openStationPopup(stationId)
+      (window as any).openStationPopup(stationId);
     } else {
-      console.warn("Global openStationPopup function is not available")
+      console.warn("Global openStationPopup function is not available");
     }
-  }
+  };
 
   // Zeit nur im Client setzen (Hydration-Problem lösen)
   useEffect(() => {
-    setCurrentTime(new Date().toLocaleString())
-    setIsClient(true)
-  }, [])
+    setCurrentTime(new Date().toLocaleString());
+    setIsClient(true);
+  }, []);
 
   // Reset when dataset changes
   useEffect(() => {
-    console.log("Dataset changed to:", activeDataset)
-  }, [activeDataset])
+    console.log("Dataset changed to:", activeDataset);
+  }, [activeDataset]);
 
   // REAL measurement data from Excel table - WATER
   const waterMeasurementPoints = [
@@ -157,7 +163,7 @@ export default function Dashboard() {
       name: "Measurement Station 8",
       type: "Restored",
     },
-  ]
+  ];
 
   // SOIL measurement data from Excel table
   const soilMeasurementPoints = [
@@ -505,65 +511,106 @@ export default function Dashboard() {
       name: "Soil Station 20",
       type: "Restored",
     },
-  ]
+  ];
 
-  const measurementPoints = activeDataset === "water" ? waterMeasurementPoints : soilMeasurementPoints
+  const measurementPoints =
+    activeDataset === "water" ? waterMeasurementPoints : soilMeasurementPoints;
 
   // Calculate statistics for active dataset
   const calculateStats = () => {
-    const restored = measurementPoints.filter((p) => p.restored === "y")
-    const nonRestored = measurementPoints.filter((p) => p.restored === "n")
+    const restored = measurementPoints.filter((p) => p.restored === "y");
+    const nonRestored = measurementPoints.filter((p) => p.restored === "n");
 
     if (activeDataset === "water") {
       return {
         temperature: {
-          restored: (restored.reduce((sum, p) => sum + (p as any).temperature, 0) / restored.length).toFixed(1),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) / nonRestored.length).toFixed(
-            1,
-          ),
+          restored: (
+            restored.reduce((sum, p) => sum + (p as any).temperature, 0) /
+            restored.length
+          ).toFixed(1),
+          nonRestored: (
+            nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) /
+            nonRestored.length
+          ).toFixed(1),
         },
         oxygen: {
-          restored: (restored.reduce((sum, p) => sum + (p as any).oxygen, 0) / restored.length).toFixed(2),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).oxygen, 0) / nonRestored.length).toFixed(2),
+          restored: (
+            restored.reduce((sum, p) => sum + (p as any).oxygen, 0) /
+            restored.length
+          ).toFixed(2),
+          nonRestored: (
+            nonRestored.reduce((sum, p) => sum + (p as any).oxygen, 0) /
+            nonRestored.length
+          ).toFixed(2),
         },
         pH: {
-          restored: (restored.reduce((sum, p) => sum + (p as any).pH, 0) / restored.length).toFixed(2),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).pH, 0) / nonRestored.length).toFixed(2),
+          restored: (
+            restored.reduce((sum, p) => sum + (p as any).pH, 0) /
+            restored.length
+          ).toFixed(2),
+          nonRestored: (
+            nonRestored.reduce((sum, p) => sum + (p as any).pH, 0) /
+            nonRestored.length
+          ).toFixed(2),
         },
         conductivity: {
-          restored: Math.round(restored.reduce((sum, p) => sum + (p as any).conductivity, 0) / restored.length),
+          restored: Math.round(
+            restored.reduce((sum, p) => sum + (p as any).conductivity, 0) /
+              restored.length,
+          ),
           nonRestored: Math.round(
-            nonRestored.reduce((sum, p) => sum + (p as any).conductivity, 0) / nonRestored.length,
+            nonRestored.reduce((sum, p) => sum + (p as any).conductivity, 0) /
+              nonRestored.length,
           ),
         },
         species: {
-          restored: (restored.reduce((sum, p) => sum + (p as any).numberOfSpecies, 0) / restored.length).toFixed(1),
+          restored: (
+            restored.reduce((sum, p) => sum + (p as any).numberOfSpecies, 0) /
+            restored.length
+          ).toFixed(1),
           nonRestored: (
-            nonRestored.reduce((sum, p) => sum + (p as any).numberOfSpecies, 0) / nonRestored.length
+            nonRestored.reduce(
+              (sum, p) => sum + (p as any).numberOfSpecies,
+              0,
+            ) / nonRestored.length
           ).toFixed(1),
         },
         flow: {
           restored: "7.4 cm/s", // Average of 9.1 and 5.6
           nonRestored: "n/a",
         },
-      }
+      };
     } else {
       return {
         temperature: {
-          restored: (restored.reduce((sum, p) => sum + (p as any).temperature, 0) / restored.length).toFixed(1),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) / nonRestored.length).toFixed(
-            1,
-          ),
+          restored: (
+            restored.reduce((sum, p) => sum + (p as any).temperature, 0) /
+            restored.length
+          ).toFixed(1),
+          nonRestored: (
+            nonRestored.reduce((sum, p) => sum + (p as any).temperature, 0) /
+            nonRestored.length
+          ).toFixed(1),
         },
         humidity: {
-          restored: (restored.reduce((sum, p) => sum + (p as any).humidity, 0) / restored.length).toFixed(1),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).humidity, 0) / nonRestored.length).toFixed(1),
+          restored: (
+            restored.reduce((sum, p) => sum + (p as any).humidity, 0) /
+            restored.length
+          ).toFixed(1),
+          nonRestored: (
+            nonRestored.reduce((sum, p) => sum + (p as any).humidity, 0) /
+            nonRestored.length
+          ).toFixed(1),
         },
         soilMoisture: {
-          restored: (restored.reduce((sum, p) => sum + (p as any).soilMoisture, 0) / restored.length).toFixed(2),
-          nonRestored: (nonRestored.reduce((sum, p) => sum + (p as any).soilMoisture, 0) / nonRestored.length).toFixed(
-            2,
-          ),
+          restored: (
+            restored.reduce((sum, p) => sum + (p as any).soilMoisture, 0) /
+            restored.length
+          ).toFixed(2),
+          nonRestored: (
+            nonRestored.reduce((sum, p) => sum + (p as any).soilMoisture, 0) /
+            nonRestored.length
+          ).toFixed(2),
         },
         humidityRange: {
           restored: `${Math.min(...restored.map((p) => (p as any).humidity)).toFixed(1)}-${Math.max(...restored.map((p) => (p as any).humidity)).toFixed(1)}%`,
@@ -577,11 +624,11 @@ export default function Dashboard() {
           restored: restored.length,
           nonRestored: nonRestored.length,
         },
-      }
+      };
     }
-  }
+  };
 
-  const stats = calculateStats()
+  const stats = calculateStats();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -589,7 +636,9 @@ export default function Dashboard() {
       <header className="flex items-center gap-2 px-4 py-3 border-b bg-white">
         <SidebarTrigger />
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-semibold">UAV Protected Area Study - Dashboard</h1>
+          <h1 className="text-xl font-semibold">
+            UAV Protected Area Study - Dashboard
+          </h1>
           <Badge variant="outline">Environmental Monitoring</Badge>
         </div>
       </header>
@@ -603,7 +652,10 @@ export default function Dashboard() {
             <Card className="h-[480px]">
               <CardContent className="p-0 h-[480px]">
                 {isClient ? (
-                  <LeafletMap measurementPoints={measurementPoints} height="100%" />
+                  <LeafletMap
+                    measurementPoints={measurementPoints}
+                    height="100%"
+                  />
                 ) : (
                   <div className="h-full bg-gray-100 animate-pulse rounded" />
                 )}
@@ -670,11 +722,15 @@ export default function Dashboard() {
                   {/* Water stations summary */}
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-green-50 p-2 rounded border border-green-200">
-                      <div className="text-xs font-medium text-green-800">Restored</div>
+                      <div className="text-xs font-medium text-green-800">
+                        Restored
+                      </div>
                       <div className="text-lg font-bold text-green-600">3</div>
                     </div>
                     <div className="bg-red-50 p-2 rounded border border-red-200">
-                      <div className="text-xs font-medium text-red-800">Non-Restored</div>
+                      <div className="text-xs font-medium text-red-800">
+                        Non-Restored
+                      </div>
                       <div className="text-lg font-bold text-red-600">3</div>
                     </div>
                   </div>
@@ -686,9 +742,9 @@ export default function Dashboard() {
                       className="w-full text-xs p-1 border rounded bg-white"
                       onChange={(e) => {
                         if (e.target.value) {
-                          const stationId = Number.parseInt(e.target.value)
-                          handleStationSelection(stationId)
-                          e.target.value = "" // Reset selection
+                          const stationId = Number.parseInt(e.target.value);
+                          handleStationSelection(stationId);
+                          e.target.value = ""; // Reset selection
                         }
                       }}
                     >
@@ -720,17 +776,23 @@ export default function Dashboard() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm">Oxygen Levels</CardTitle>
-                <CardDescription className="text-xs">LAWA Standard: ≥9 mg/L</CardDescription>
+                <CardDescription className="text-xs">
+                  LAWA Standard: ≥9 mg/L
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-xs">Restored:</span>
-                    <span className="font-bold text-green-600">{stats.oxygen?.restored} mg/L</span>
+                    <span className="font-bold text-green-600">
+                      {stats.oxygen?.restored} mg/L
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs">Non-Restored:</span>
-                    <span className="font-bold text-red-600">{stats.oxygen?.nonRestored} mg/L</span>
+                    <span className="font-bold text-red-600">
+                      {stats.oxygen?.nonRestored} mg/L
+                    </span>
                   </div>
 
                   {/* Simple bar with markers and axis labels */}
@@ -792,17 +854,23 @@ export default function Dashboard() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm">Water Temperature</CardTitle>
-                <CardDescription className="text-xs">LAWA Standard: 19-24°C (max. annual)</CardDescription>
+                <CardDescription className="text-xs">
+                  LAWA Standard: 19-24°C (max. annual)
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-xs">Restored:</span>
-                    <span className="font-bold text-green-600">{stats.temperature?.restored}°C</span>
+                    <span className="font-bold text-green-600">
+                      {stats.temperature?.restored}°C
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs">Non-Restored:</span>
-                    <span className="font-bold text-red-600">{stats.temperature?.nonRestored}°C</span>
+                    <span className="font-bold text-red-600">
+                      {stats.temperature?.nonRestored}°C
+                    </span>
                   </div>
 
                   {/* Simple bar with markers and axis labels */}
@@ -864,17 +932,23 @@ export default function Dashboard() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm">pH Values</CardTitle>
-                <CardDescription className="text-xs">LAWA Standard: 7.0-8.5</CardDescription>
+                <CardDescription className="text-xs">
+                  LAWA Standard: 7.0-8.5
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-xs">Restored:</span>
-                    <span className="font-bold text-green-600">{stats.pH?.restored}</span>
+                    <span className="font-bold text-green-600">
+                      {stats.pH?.restored}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs">Non-Restored:</span>
-                    <span className="font-bold text-red-600">{stats.pH?.nonRestored}</span>
+                    <span className="font-bold text-red-600">
+                      {stats.pH?.nonRestored}
+                    </span>
                   </div>
 
                   {/* Simple bar with markers and axis labels */}
@@ -941,11 +1015,15 @@ export default function Dashboard() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-xs">Restored:</span>
-                    <span className="font-bold text-green-600">{stats.conductivity?.restored} μS/cm</span>
+                    <span className="font-bold text-green-600">
+                      {stats.conductivity?.restored} μS/cm
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-xs">Non-Restored:</span>
-                    <span className="font-bold text-red-600">{stats.conductivity?.nonRestored} μS/cm</span>
+                    <span className="font-bold text-red-600">
+                      {stats.conductivity?.nonRestored} μS/cm
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -987,27 +1065,37 @@ export default function Dashboard() {
                     {/* Soil stations summary */}
                     <div className="grid grid-cols-2 gap-2">
                       <div className="bg-green-50 p-3 rounded border border-green-200">
-                        <div className="text-xs font-medium text-green-800">Restored Areas</div>
-                        <div className="text-2xl font-bold text-green-600">16</div>
+                        <div className="text-xs font-medium text-green-800">
+                          Restored Areas
+                        </div>
+                        <div className="text-2xl font-bold text-green-600">
+                          16
+                        </div>
                         <div className="text-xs text-green-600">stations</div>
                       </div>
                       <div className="bg-orange-50 p-3 rounded border border-orange-200">
-                        <div className="text-xs font-medium text-orange-800">Non-Restored</div>
-                        <div className="text-2xl font-bold text-orange-600">15</div>
+                        <div className="text-xs font-medium text-orange-800">
+                          Non-Restored
+                        </div>
+                        <div className="text-2xl font-bold text-orange-600">
+                          15
+                        </div>
                         <div className="text-xs text-orange-600">stations</div>
                       </div>
                     </div>
 
                     {/* Station selection */}
                     <div className="space-y-2">
-                      <div className="text-xs text-gray-600">Select Station:</div>
+                      <div className="text-xs text-gray-600">
+                        Select Station:
+                      </div>
                       <select
                         className="w-full text-xs p-2 border rounded bg-white"
                         onChange={(e) => {
                           if (e.target.value) {
-                            const stationId = Number.parseInt(e.target.value)
-                            handleStationSelection(stationId)
-                            e.target.value = "" // Reset selection
+                            const stationId = Number.parseInt(e.target.value);
+                            handleStationSelection(stationId);
+                            e.target.value = ""; // Reset selection
                           }
                         }}
                       >
@@ -1016,7 +1104,10 @@ export default function Dashboard() {
                           {soilMeasurementPoints
                             .filter((p) => p.restored === "y")
                             .map((point) => (
-                              <option key={point.objectId} value={point.objectId}>
+                              <option
+                                key={point.objectId}
+                                value={point.objectId}
+                              >
                                 Station {point.objectId}
                               </option>
                             ))}
@@ -1025,7 +1116,10 @@ export default function Dashboard() {
                           {soilMeasurementPoints
                             .filter((p) => p.restored === "n")
                             .map((point) => (
-                              <option key={point.objectId} value={point.objectId}>
+                              <option
+                                key={point.objectId}
+                                value={point.objectId}
+                              >
                                 Station {point.objectId}
                               </option>
                             ))}
@@ -1043,27 +1137,41 @@ export default function Dashboard() {
                     <Thermometer className="h-4 w-4" />
                     Soil Temperature
                   </CardTitle>
-                  <CardDescription className="text-xs">Average temperature comparison</CardDescription>
+                  <CardDescription className="text-xs">
+                    Average temperature comparison
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-600">Restored Areas:</span>
-                        <span className="font-bold text-green-600 text-lg">{stats.temperature?.restored}°C</span>
+                        <span className="text-xs text-gray-600">
+                          Restored Areas:
+                        </span>
+                        <span className="font-bold text-green-600 text-lg">
+                          {stats.temperature?.restored}°C
+                        </span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-600">Non-Restored:</span>
-                        <span className="font-bold text-orange-600 text-lg">{stats.temperature?.nonRestored}°C</span>
+                        <span className="text-xs text-gray-600">
+                          Non-Restored:
+                        </span>
+                        <span className="font-bold text-orange-600 text-lg">
+                          {stats.temperature?.nonRestored}°C
+                        </span>
                       </div>
                     </div>
 
                     {/* Temperature difference indicator */}
                     <div className="bg-blue-50 p-2 rounded border border-blue-200">
-                      <div className="text-xs text-blue-800 font-medium">Temperature Difference</div>
+                      <div className="text-xs text-blue-800 font-medium">
+                        Temperature Difference
+                      </div>
                       <div className="text-sm text-blue-600">
                         {(
-                          Number.parseFloat(stats.temperature?.nonRestored || "0") -
+                          Number.parseFloat(
+                            stats.temperature?.nonRestored || "0",
+                          ) -
                           Number.parseFloat(stats.temperature?.restored || "0")
                         ).toFixed(1)}
                         °C warmer in non-restored areas
@@ -1080,24 +1188,36 @@ export default function Dashboard() {
                     <Droplets className="h-4 w-4" />
                     Soil Humidity
                   </CardTitle>
-                  <CardDescription className="text-xs">Relative humidity levels</CardDescription>
+                  <CardDescription className="text-xs">
+                    Relative humidity levels
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-600">Restored Areas:</span>
-                        <span className="font-bold text-green-600 text-lg">{stats.humidity?.restored}%</span>
+                        <span className="text-xs text-gray-600">
+                          Restored Areas:
+                        </span>
+                        <span className="font-bold text-green-600 text-lg">
+                          {stats.humidity?.restored}%
+                        </span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-600">Non-Restored:</span>
-                        <span className="font-bold text-blue-600 text-lg">{stats.humidity?.nonRestored}%</span>
+                        <span className="text-xs text-gray-600">
+                          Non-Restored:
+                        </span>
+                        <span className="font-bold text-blue-600 text-lg">
+                          {stats.humidity?.nonRestored}%
+                        </span>
                       </div>
                     </div>
 
                     {/* Humidity difference indicator */}
                     <div className="bg-green-50 p-2 rounded border border-green-200">
-                      <div className="text-xs text-green-800 font-medium">Humidity Advantage</div>
+                      <div className="text-xs text-green-800 font-medium">
+                        Humidity Advantage
+                      </div>
                       <div className="text-sm text-green-600">
                         {(
                           Number.parseFloat(stats.humidity?.restored || "0") -
@@ -1117,28 +1237,44 @@ export default function Dashboard() {
                     <Gauge className="h-4 w-4" />
                     Soil Moisture
                   </CardTitle>
-                  <CardDescription className="text-xs">Moisture content levels</CardDescription>
+                  <CardDescription className="text-xs">
+                    Moisture content levels
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-600">Restored Areas:</span>
-                        <span className="font-bold text-green-600 text-lg">{stats.soilMoisture?.restored}%</span>
+                        <span className="text-xs text-gray-600">
+                          Restored Areas:
+                        </span>
+                        <span className="font-bold text-green-600 text-lg">
+                          {stats.soilMoisture?.restored}%
+                        </span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-600">Non-Restored:</span>
-                        <span className="font-bold text-orange-600 text-lg">{stats.soilMoisture?.nonRestored}%</span>
+                        <span className="text-xs text-gray-600">
+                          Non-Restored:
+                        </span>
+                        <span className="font-bold text-orange-600 text-lg">
+                          {stats.soilMoisture?.nonRestored}%
+                        </span>
                       </div>
                     </div>
 
                     {/* Moisture difference indicator */}
                     <div className="bg-gray-50 p-2 rounded border border-gray-200">
-                      <div className="text-xs text-gray-800 font-medium">Moisture Difference</div>
+                      <div className="text-xs text-gray-800 font-medium">
+                        Moisture Difference
+                      </div>
                       <div className="text-sm text-gray-600">
                         {Math.abs(
-                          Number.parseFloat(stats.soilMoisture?.restored || "0") -
-                            Number.parseFloat(stats.soilMoisture?.nonRestored || "0"),
+                          Number.parseFloat(
+                            stats.soilMoisture?.restored || "0",
+                          ) -
+                            Number.parseFloat(
+                              stats.soilMoisture?.nonRestored || "0",
+                            ),
                         ).toFixed(2)}
                         % variation
                       </div>
@@ -1153,31 +1289,53 @@ export default function Dashboard() {
               {/* Temperature Range Analysis */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Temperature Range Analysis</CardTitle>
-                  <CardDescription>Detailed temperature distribution across monitoring stations</CardDescription>
+                  <CardTitle className="text-base">
+                    Temperature Range Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Detailed temperature distribution across monitoring stations
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                        <div className="text-sm font-medium text-green-800 mb-2">Restored Areas</div>
-                        <div className="text-2xl font-bold text-green-600 mb-1">{stats.tempRange?.restored}</div>
-                        <div className="text-xs text-green-600">Temperature Range</div>
-                        <div className="text-sm text-green-700 mt-2">Average: {stats.temperature?.restored}°C</div>
+                        <div className="text-sm font-medium text-green-800 mb-2">
+                          Restored Areas
+                        </div>
+                        <div className="text-2xl font-bold text-green-600 mb-1">
+                          {stats.tempRange?.restored}
+                        </div>
+                        <div className="text-xs text-green-600">
+                          Temperature Range
+                        </div>
+                        <div className="text-sm text-green-700 mt-2">
+                          Average: {stats.temperature?.restored}°C
+                        </div>
                       </div>
                       <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                        <div className="text-sm font-medium text-orange-800 mb-2">Non-Restored Areas</div>
-                        <div className="text-2xl font-bold text-orange-600 mb-1">{stats.tempRange?.nonRestored}</div>
-                        <div className="text-xs text-orange-600">Temperature Range</div>
-                        <div className="text-sm text-orange-700 mt-2">Average: {stats.temperature?.nonRestored}°C</div>
+                        <div className="text-sm font-medium text-orange-800 mb-2">
+                          Non-Restored Areas
+                        </div>
+                        <div className="text-2xl font-bold text-orange-600 mb-1">
+                          {stats.tempRange?.nonRestored}
+                        </div>
+                        <div className="text-xs text-orange-600">
+                          Temperature Range
+                        </div>
+                        <div className="text-sm text-orange-700 mt-2">
+                          Average: {stats.temperature?.nonRestored}°C
+                        </div>
                       </div>
                     </div>
 
                     <div className="bg-blue-50 p-3 rounded border border-blue-200">
-                      <div className="text-sm font-medium text-blue-800">Key Findings</div>
+                      <div className="text-sm font-medium text-blue-800">
+                        Key Findings
+                      </div>
                       <div className="text-sm text-blue-700 mt-1">
-                        Restored areas show consistently lower temperatures, indicating better soil health and
-                        vegetation cover.
+                        Restored areas show consistently lower temperatures,
+                        indicating better soil health and vegetation cover.
                       </div>
                     </div>
                   </div>
@@ -1187,31 +1345,53 @@ export default function Dashboard() {
               {/* Humidity Range Analysis */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">Humidity Range Analysis</CardTitle>
-                  <CardDescription>Comprehensive humidity distribution patterns</CardDescription>
+                  <CardTitle className="text-base">
+                    Humidity Range Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Comprehensive humidity distribution patterns
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                        <div className="text-sm font-medium text-green-800 mb-2">Restored Areas</div>
-                        <div className="text-2xl font-bold text-green-600 mb-1">{stats.humidityRange?.restored}</div>
-                        <div className="text-xs text-green-600">Humidity Range</div>
-                        <div className="text-sm text-green-700 mt-2">Average: {stats.humidity?.restored}%</div>
+                        <div className="text-sm font-medium text-green-800 mb-2">
+                          Restored Areas
+                        </div>
+                        <div className="text-2xl font-bold text-green-600 mb-1">
+                          {stats.humidityRange?.restored}
+                        </div>
+                        <div className="text-xs text-green-600">
+                          Humidity Range
+                        </div>
+                        <div className="text-sm text-green-700 mt-2">
+                          Average: {stats.humidity?.restored}%
+                        </div>
                       </div>
                       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                        <div className="text-sm font-medium text-blue-800 mb-2">Non-Restored Areas</div>
-                        <div className="text-2xl font-bold text-blue-600 mb-1">{stats.humidityRange?.nonRestored}</div>
-                        <div className="text-xs text-blue-600">Humidity Range</div>
-                        <div className="text-sm text-blue-700 mt-2">Average: {stats.humidity?.nonRestored}%</div>
+                        <div className="text-sm font-medium text-blue-800 mb-2">
+                          Non-Restored Areas
+                        </div>
+                        <div className="text-2xl font-bold text-blue-600 mb-1">
+                          {stats.humidityRange?.nonRestored}
+                        </div>
+                        <div className="text-xs text-blue-600">
+                          Humidity Range
+                        </div>
+                        <div className="text-sm text-blue-700 mt-2">
+                          Average: {stats.humidity?.nonRestored}%
+                        </div>
                       </div>
                     </div>
 
                     <div className="bg-green-50 p-3 rounded border border-green-200">
-                      <div className="text-sm font-medium text-green-800">Key Findings</div>
+                      <div className="text-sm font-medium text-green-800">
+                        Key Findings
+                      </div>
                       <div className="text-sm text-green-700 mt-1">
-                        Restored areas maintain higher humidity levels, supporting better ecosystem recovery and
-                        biodiversity.
+                        Restored areas maintain higher humidity levels,
+                        supporting better ecosystem recovery and biodiversity.
                       </div>
                     </div>
                   </div>
@@ -1222,5 +1402,5 @@ export default function Dashboard() {
         )}
       </div>
     </div>
-  )
+  );
 }

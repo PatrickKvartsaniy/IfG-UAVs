@@ -1,110 +1,116 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react";
 
 interface MapProps {
-  selectedSpecies: any | null
-  allSpecies: any[]
+  selectedSpecies: any | null;
+  allSpecies: any[];
 }
 
 export default function WikiMap({ selectedSpecies, allSpecies }: MapProps) {
-  const mapContainer = useRef<HTMLDivElement>(null)
-  const map = useRef<any>(null)
-  const markersRef = useRef<any[]>([])
-  const [isLoaded, setIsLoaded] = useState(false)
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Colors for different categories
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "birds":
-        return "#3b82f6"
+        return "#3b82f6";
       case "fish":
-        return "#06b6d4"
+        return "#06b6d4";
       case "flora":
-        return "#10b981"
+        return "#10b981";
       case "mammals":
-        return "#f59e0b"
+        return "#f59e0b";
       default:
-        return "#8b5cf6"
+        return "#8b5cf6";
     }
-  }
+  };
 
   useEffect(() => {
     const loadLeaflet = async () => {
-      if (typeof window === "undefined") return
+      if (typeof window === "undefined") return;
 
       // Check if Leaflet is already loaded
       if ((window as any).L) {
-        initializeMap()
-        return
+        initializeMap();
+        return;
       }
 
       // Load CSS
-      const cssLink = document.createElement("link")
-      cssLink.rel = "stylesheet"
-      cssLink.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      document.head.appendChild(cssLink)
+      const cssLink = document.createElement("link");
+      cssLink.rel = "stylesheet";
+      cssLink.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(cssLink);
 
       // Load JS
-      const script = document.createElement("script")
-      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
       script.onload = () => {
-        initializeMap()
-      }
-      document.head.appendChild(script)
-    }
+        initializeMap();
+      };
+      document.head.appendChild(script);
+    };
 
     const initializeMap = () => {
-      if (!mapContainer.current || map.current) return
+      if (!mapContainer.current || map.current) return;
 
-      const L = (window as any).L
+      const L = (window as any).L;
       if (!L) {
-        console.error("Leaflet (L) not found on window object.")
-        return
+        console.error("Leaflet (L) not found on window object.");
+        return;
       }
 
       // Initialize map with wildlife area coordinates
-      map.current = L.map(mapContainer.current).setView([51.987, 7.626], 14)
+      map.current = L.map(mapContainer.current).setView([51.987, 7.626], 14);
 
       // Add satellite imagery tiles
-      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-        attribution: "© Esri © OpenStreetMap contributors",
-        maxZoom: 18,
-      }).addTo(map.current)
+      L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "© Esri © OpenStreetMap contributors",
+          maxZoom: 18,
+        },
+      ).addTo(map.current);
 
-      setIsLoaded(true)
-    }
+      setIsLoaded(true);
+    };
 
-    loadLeaflet()
+    loadLeaflet();
 
     return () => {
       if (map.current) {
-        map.current.remove()
-        map.current = null
+        map.current.remove();
+        map.current = null;
       }
-    }
-  }, [])
+    };
+  }, []);
 
   useEffect(() => {
-    if (!map.current || !isLoaded || typeof window === "undefined") return
+    if (!map.current || !isLoaded || typeof window === "undefined") return;
 
-    const L = (window as any).L
+    const L = (window as any).L;
 
     // Clear existing markers
     markersRef.current.forEach((marker) => {
-      map.current.removeLayer(marker)
-    })
-    markersRef.current = []
+      map.current.removeLayer(marker);
+    });
+    markersRef.current = [];
 
     if (selectedSpecies) {
       // Add marker for selected species
-      const marker = L.circleMarker([selectedSpecies.coordinates.lat, selectedSpecies.coordinates.lng], {
-        color: "white",
-        fillColor: getCategoryColor(selectedSpecies.category),
-        fillOpacity: 0.8,
-        radius: 12,
-        weight: 3,
-      }).addTo(map.current)
+      const marker = L.circleMarker(
+        [selectedSpecies.coordinates.lat, selectedSpecies.coordinates.lng],
+        {
+          color: "white",
+          fillColor: getCategoryColor(selectedSpecies.category),
+          fillOpacity: 0.8,
+          radius: 12,
+          weight: 3,
+        },
+      ).addTo(map.current);
 
       const popupContent = `
                 <div style="font-family: system-ui; padding: 4px;">
@@ -113,54 +119,63 @@ export default function WikiMap({ selectedSpecies, allSpecies }: MapProps) {
                   <p style="margin: 4px 0 0 0; font-size: 11px;">${selectedSpecies.habitat}</p>
                   <p style="margin: 4px 0 0 0; font-size: 11px; color: #666;">Status: ${selectedSpecies.status}</p>
                 </div>
-            `
+            `;
 
-      marker.bindPopup(popupContent).openPopup()
-      markersRef.current.push(marker)
+      marker.bindPopup(popupContent).openPopup();
+      markersRef.current.push(marker);
 
       // Add habitat polygon if available
       if (selectedSpecies.polygon) {
         const polygon = L.polygon(
-          selectedSpecies.polygon.map((coord: number[]) => [coord[1], coord[0]]),
+          selectedSpecies.polygon.map((coord: number[]) => [
+            coord[1],
+            coord[0],
+          ]),
           {
             color: getCategoryColor(selectedSpecies.category),
             fillColor: getCategoryColor(selectedSpecies.category),
             fillOpacity: 0.3,
             weight: 2,
           },
-        ).addTo(map.current)
+        ).addTo(map.current);
 
-        markersRef.current.push(polygon)
+        markersRef.current.push(polygon);
       }
 
       // Fly to selected species
-      map.current.setView([selectedSpecies.coordinates.lat, selectedSpecies.coordinates.lng], 16)
+      map.current.setView(
+        [selectedSpecies.coordinates.lat, selectedSpecies.coordinates.lng],
+        16,
+      );
     } else {
       // Show all species as small markers
       allSpecies.forEach((species) => {
-        const marker = L.circleMarker([species.coordinates.lat, species.coordinates.lng], {
-          color: "white",
-          fillColor: getCategoryColor(species.category),
-          fillOpacity: 0.7,
-          radius: 6,
-          weight: 2,
-        }).addTo(map.current)
+        const marker = L.circleMarker(
+          [species.coordinates.lat, species.coordinates.lng],
+          {
+            color: "white",
+            fillColor: getCategoryColor(species.category),
+            fillOpacity: 0.7,
+            radius: 6,
+            weight: 2,
+          },
+        ).addTo(map.current);
 
         const popupContent = `
                     <div style="font-family: system-ui; padding: 4px;">
                         <h4 style="margin: 0 0 2px 0; font-size: 13px; font-weight: bold;">${species.name}</h4>
                         <p style="margin: 0; font-size: 11px; color: #666; text-transform: capitalize;">${species.category}</p>
                     </div>
-                `
+                `;
 
-        marker.bindPopup(popupContent)
-        markersRef.current.push(marker)
-      })
+        marker.bindPopup(popupContent);
+        markersRef.current.push(marker);
+      });
 
       // Reset view to show all species
-      map.current.setView([51.987, 7.626], 14)
+      map.current.setView([51.987, 7.626], 14);
     }
-  }, [selectedSpecies, allSpecies, isLoaded])
+  }, [selectedSpecies, allSpecies, isLoaded]);
 
   return (
     <div className="relative w-full h-full">
@@ -181,24 +196,36 @@ export default function WikiMap({ selectedSpecies, allSpecies }: MapProps) {
           <h4 className="font-semibold mb-2">Species Categories</h4>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getCategoryColor("birds") }}></div>
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: getCategoryColor("birds") }}
+              ></div>
               <span>Birds</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getCategoryColor("fish") }}></div>
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: getCategoryColor("fish") }}
+              ></div>
               <span>Fish</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getCategoryColor("flora") }}></div>
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: getCategoryColor("flora") }}
+              ></div>
               <span>Flora</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: getCategoryColor("mammals") }}></div>
+              <div
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: getCategoryColor("mammals") }}
+              ></div>
               <span>Mammals</span>
             </div>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,8 +1,14 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function AboutPage() {
   return (
@@ -23,7 +29,9 @@ export default function AboutPage() {
             alt="UAV Study Research Team"
             className="mx-auto rounded-lg shadow-lg"
           />
-          <p className="text-sm text-muted-foreground mt-2">UAV Study Research Team</p>
+          <p className="text-sm text-muted-foreground mt-2">
+            UAV Study Research Team
+          </p>
         </div>
 
         {/* Teams */}
@@ -47,7 +55,9 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle>Image Analysis</CardTitle>
-              <CardDescription>UAV imagery processing and analysis</CardDescription>
+              <CardDescription>
+                UAV imagery processing and analysis
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
@@ -66,7 +76,9 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle>Sensors</CardTitle>
-              <CardDescription>Environmental monitoring equipment</CardDescription>
+              <CardDescription>
+                Environmental monitoring equipment
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2">
@@ -94,5 +106,5 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,18 +1,24 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Search, MapPin, TreePine, Fish, Bird, Flower } from "lucide-react"
-import dynamic from "next/dynamic"
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Search, MapPin, TreePine, Fish, Bird, Flower } from "lucide-react";
+import dynamic from "next/dynamic";
 
 // Import Leaflet component dynamically
 const MapWithNoSSR = dynamic(() => import("@/components/WikiMap"), {
   ssr: false,
-})
+});
 
 const wildlifeData = [
   {
@@ -137,28 +143,31 @@ const wildlifeData = [
   },
 ];
 
-const categories = ["all", "birds", "fish", "flora", "mammals"]
+const categories = ["all", "birds", "fish", "flora", "mammals"];
 
 export default function WikiPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedSpecies, setSelectedSpecies] = useState<(typeof wildlifeData)[0] | null>(null)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSpecies, setSelectedSpecies] = useState<
+    (typeof wildlifeData)[0] | null
+  >(null);
 
   const filteredData = wildlifeData.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.scientificName.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "all" || item.category === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+      item.scientificName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || item.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
 
   const handleSpeciesClick = (species: (typeof wildlifeData)[0]) => {
-    setSelectedSpecies(species)
-  }
+    setSelectedSpecies(species);
+  };
 
   const clearSelection = () => {
-    setSelectedSpecies(null)
-  }
+    setSelectedSpecies(null);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -189,7 +198,9 @@ export default function WikiPage() {
                   {categories.map((category) => (
                     <Button
                       key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
+                      variant={
+                        selectedCategory === category ? "default" : "outline"
+                      }
                       size="sm"
                       onClick={() => setSelectedCategory(category)}
                       className="capitalize"
@@ -211,12 +222,18 @@ export default function WikiPage() {
                   <CardTitle className="flex items-center justify-between">
                     <span>Species ({filteredData.length})</span>
                     {selectedSpecies && (
-                      <Button variant="ghost" size="sm" onClick={clearSelection}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={clearSelection}
+                      >
                         Clear
                       </Button>
                     )}
                   </CardTitle>
-                  <CardDescription>Click on a species to view on map</CardDescription>
+                  <CardDescription>
+                    Click on a species to view on map
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="max-h-[600px] overflow-y-auto">
@@ -224,7 +241,9 @@ export default function WikiPage() {
                       <div
                         key={species.id}
                         className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
-                          selectedSpecies?.id === species.id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
+                          selectedSpecies?.id === species.id
+                            ? "bg-blue-50 border-l-4 border-l-blue-500"
+                            : ""
                         }`}
                         onClick={() => handleSpeciesClick(species)}
                       >
@@ -233,8 +252,12 @@ export default function WikiPage() {
                             <species.icon className="h-5 w-5 text-gray-600" />
                             <div>
                               <h4 className="font-medium">{species.name}</h4>
-                              <p className="text-sm text-muted-foreground italic">{species.scientificName}</p>
-                              <p className="text-xs text-muted-foreground capitalize">{species.category}</p>
+                              <p className="text-sm text-muted-foreground italic">
+                                {species.scientificName}
+                              </p>
+                              <p className="text-xs text-muted-foreground capitalize">
+                                {species.category}
+                              </p>
                             </div>
                           </div>
                           <Badge
@@ -281,7 +304,10 @@ export default function WikiPage() {
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="h-[400px] w-full">
-                    <MapWithNoSSR selectedSpecies={selectedSpecies} allSpecies={wildlifeData} />
+                    <MapWithNoSSR
+                      selectedSpecies={selectedSpecies}
+                      allSpecies={wildlifeData}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -303,7 +329,13 @@ export default function WikiPage() {
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex gap-2">
-                        <Badge variant={selectedSpecies.status === "Protected" ? "destructive" : "secondary"}>
+                        <Badge
+                          variant={
+                            selectedSpecies.status === "Protected"
+                              ? "destructive"
+                              : "secondary"
+                          }
+                        >
                           {selectedSpecies.status}
                         </Badge>
                         <Badge variant="outline" className="capitalize">
@@ -311,26 +343,39 @@ export default function WikiPage() {
                         </Badge>
                       </div>
 
-                      <p className="text-sm leading-relaxed">{selectedSpecies.description}</p>
+                      <p className="text-sm leading-relaxed">
+                        {selectedSpecies.description}
+                      </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
                         <div>
                           <h4 className="font-medium text-sm mb-1">Habitat</h4>
-                          <p className="text-sm text-muted-foreground">{selectedSpecies.habitat}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-sm mb-1">Last Observed</h4>
-                          <p className="text-sm text-muted-foreground">{selectedSpecies.lastSeen}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-sm mb-1">Coordinates</h4>
                           <p className="text-sm text-muted-foreground">
-                            {selectedSpecies.coordinates.lat.toFixed(4)}, {selectedSpecies.coordinates.lng.toFixed(4)}
+                            {selectedSpecies.habitat}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">
+                            Last Observed
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedSpecies.lastSeen}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">
+                            Coordinates
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedSpecies.coordinates.lat.toFixed(4)},{" "}
+                            {selectedSpecies.coordinates.lng.toFixed(4)}
                           </p>
                         </div>
                         <div>
                           <h4 className="font-medium text-sm mb-1">Status</h4>
-                          <p className="text-sm text-muted-foreground">{selectedSpecies.status}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedSpecies.status}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -344,8 +389,8 @@ export default function WikiPage() {
                     <MapPin className="h-12 w-12 text-muted-foreground mb-4" />
                     <h3 className="font-medium mb-2">Select a Species</h3>
                     <p className="text-sm text-muted-foreground text-center max-w-md">
-                      Choose a species from the list to view its location, habitat details, and additional information
-                      on the map
+                      Choose a species from the list to view its location,
+                      habitat details, and additional information on the map
                     </p>
                   </CardContent>
                 </Card>
@@ -355,5 +400,5 @@ export default function WikiPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

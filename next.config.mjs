@@ -1,21 +1,20 @@
 /** @type {import('next').NextConfig} */
-const repo = 'uav-study-web-app';
-const isGithubPages = process.env.NODE_ENV === 'production';
+const repo = 'IfG-UAVs'; // GitHub repo name
+const isProd = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
-  output: 'export',
   trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+  basePath: isProd ? `/${repo}` : '',
+  assetPrefix: isProd ? `/${repo}/` : '',
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  images: {
-    unoptimized: true,
-  },
-  basePath: isGithubPages ? `/${repo}` : '',
-  assetPrefix: isGithubPages ? `/${repo}/` : '',
 };
 
 export default nextConfig;

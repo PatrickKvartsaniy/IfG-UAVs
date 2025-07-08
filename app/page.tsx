@@ -1,10 +1,24 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Plane, TreePine, BarChart3, BookOpen, Map, Shield } from "lucide-react"
-import Link from "next/link"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowRight,
+  Plane,
+  TreePine,
+  BarChart3,
+  BookOpen,
+  Map,
+  Shield,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -28,8 +42,8 @@ export default function LandingPage() {
                 <h1 className="text-6xl font-bold">UAV Study Platform</h1>
               </div>
               <p className="text-2xl mb-8 max-w-4xl">
-                Advanced environmental monitoring and research platform for protected river ecosystems using UAV
-                technology
+                Advanced environmental monitoring and research platform for
+                protected river ecosystems using UAV technology
               </p>
               {/* <div className="flex items-center justify-center gap-4 flex-wrap">
                 <Badge variant="secondary" className="px-6 py-3 text-base bg-white/20 text-white border-white/30">
@@ -58,11 +72,14 @@ export default function LandingPage() {
                 <CardHeader>
                   <BarChart3 className="h-8 w-8 text-blue-600 mb-2" />
                   <CardTitle>Dashboard</CardTitle>
-                  <CardDescription>Real-time monitoring and analytics</CardDescription>
+                  <CardDescription>
+                    Real-time monitoring and analytics
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Comprehensive overview of UAV operations, species data, and environmental metrics.
+                    Comprehensive overview of UAV operations, species data, and
+                    environmental metrics.
                   </p>
                   <Link href="/dashboard">
                     <Button variant="outline" className="w-full bg-transparent">
@@ -77,11 +94,14 @@ export default function LandingPage() {
                 <CardHeader>
                   <BookOpen className="h-8 w-8 text-green-600 mb-2" />
                   <CardTitle>Wildlife Wiki</CardTitle>
-                  <CardDescription>Interactive species database</CardDescription>
+                  <CardDescription>
+                    Interactive species database
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Explore flora and fauna with interactive maps showing habitat locations.
+                    Explore flora and fauna with interactive maps showing
+                    habitat locations.
                   </p>
                   <Link href="/wiki">
                     <Button variant="outline" className="w-full bg-transparent">
@@ -99,7 +119,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Immersive stories combining maps, data, and multimedia content.
+                    Immersive stories combining maps, data, and multimedia
+                    content.
                   </p>
                   <Link href="/story-maps">
                     <Button variant="outline" className="w-full bg-transparent">
@@ -115,8 +136,12 @@ export default function LandingPage() {
             <div className="grid gap-8 lg:grid-cols-2 mb-16">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Study Area Overview</CardTitle>
-                  <CardDescription>Protected river ecosystem in Central Europe</CardDescription>
+                  <CardTitle className="text-2xl">
+                    Study Area Overview
+                  </CardTitle>
+                  <CardDescription>
+                    Protected river ecosystem in Central Europe
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
@@ -145,16 +170,21 @@ export default function LandingPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Key Achievements</CardTitle>
-                  <CardDescription>Research milestones and discoveries</CardDescription>
+                  <CardDescription>
+                    Research milestones and discoveries
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                       <div>
-                        <p className="font-medium">Comprehensive Species Catalog</p>
+                        <p className="font-medium">
+                          Comprehensive Species Catalog
+                        </p>
                         <p className="text-sm text-muted-foreground">
-                          Identified and documented 291 species across multiple taxonomic groups
+                          Identified and documented 291 species across multiple
+                          taxonomic groups
                         </p>
                       </div>
                     </div>
@@ -163,7 +193,8 @@ export default function LandingPage() {
                       <div>
                         <p className="font-medium">Advanced UAV Mapping</p>
                         <p className="text-sm text-muted-foreground">
-                          Achieved 97% area coverage with high-resolution aerial surveys
+                          Achieved 97% area coverage with high-resolution aerial
+                          surveys
                         </p>
                       </div>
                     </div>
@@ -172,7 +203,8 @@ export default function LandingPage() {
                       <div>
                         <p className="font-medium">Conservation Impact</p>
                         <p className="text-sm text-muted-foreground">
-                          Data-driven recommendations for habitat protection and restoration
+                          Data-driven recommendations for habitat protection and
+                          restoration
                         </p>
                       </div>
                     </div>
@@ -187,7 +219,8 @@ export default function LandingPage() {
                 <CardContent className="py-12">
                   <h2 className="text-3xl font-bold mb-4">Start Exploring</h2>
                   <p className="text-xl mb-8 opacity-90">
-                    Discover the rich biodiversity of our protected river ecosystem
+                    Discover the rich biodiversity of our protected river
+                    ecosystem
                   </p>
                   <div className="flex gap-4 justify-center">
                     <Link href="/dashboard">
@@ -214,5 +247,5 @@ export default function LandingPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { CardDescription } from "@/components/ui/card"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { ExternalLink } from "lucide-react"
+import { CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ExternalLink } from "lucide-react";
 
 const references = [
   {
@@ -33,12 +33,13 @@ const references = [
     citation:
       "Radigan, Dan. (n.d.). Kanban: How the Kanban Methodology Applies to Software Development. Atlassian. Retrieved June 10, 2025, from www.atlassian.com/agile/kanban",
   },
-]
+];
 
 const tools = [
   {
     name: "ArcGIS Pro",
-    description: "Geographic Information System for spatial analysis and mapping",
+    description:
+      "Geographic Information System for spatial analysis and mapping",
     version: "3.2",
     url: "https://www.esri.com/en-us/arcgis/products/arcgis-pro",
   },
@@ -54,7 +55,7 @@ const tools = [
     version: "3.11",
     url: "https://www.python.org/",
   },
-]
+];
 
 export default function ReferencesPage() {
   return (
@@ -70,10 +71,13 @@ export default function ReferencesPage() {
       <div className="flex-1 p-6 space-y-8">
         {/* Introduction */}
         <div className="text-center space-y-4">
-          <h2 className="text-3xl font-bold text-gray-900">Scientific References & Resources</h2>
+          <h2 className="text-3xl font-bold text-gray-900">
+            Scientific References & Resources
+          </h2>
           <p className="text-muted-foreground max-w-3xl mx-auto">
-            Comprehensive collection of research papers, technical reports, datasets, and tools that support our
-            UAV-based environmental monitoring research.
+            Comprehensive collection of research papers, technical reports,
+            datasets, and tools that support our UAV-based environmental
+            monitoring research.
           </p>
         </div>
 
@@ -82,14 +86,17 @@ export default function ReferencesPage() {
           <CardHeader>
             <CardTitle>Publications & Research</CardTitle>
             <CardDescription>
-              Peer-reviewed papers, conference proceedings, and technical reports from our research team
+              Peer-reviewed papers, conference proceedings, and technical
+              reports from our research team
             </CardDescription>
           </CardHeader>
           <CardContent>
             <ol className="space-y-4">
               {references.map((ref) => (
                 <li key={ref.id} className="text-sm leading-relaxed">
-                  <span className="font-medium text-muted-foreground mr-2">{ref.id}.</span>
+                  <span className="font-medium text-muted-foreground mr-2">
+                    {ref.id}.
+                  </span>
                   {ref.citation}
                 </li>
               ))}
@@ -102,7 +109,8 @@ export default function ReferencesPage() {
           <CardHeader>
             <CardTitle>Software & Tools</CardTitle>
             <CardDescription>
-              Key software applications and tools used in our research and data analysis
+              Key software applications and tools used in our research and data
+              analysis
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -113,7 +121,9 @@ export default function ReferencesPage() {
                     <h3 className="font-semibold">{tool.name}</h3>
                     <Badge variant="outline">v{tool.version}</Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-3">{tool.description}</p>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {tool.description}
+                  </p>
                   <Button
                     variant="outline"
                     size="sm"
@@ -134,7 +144,8 @@ export default function ReferencesPage() {
           <CardHeader>
             <CardTitle>Standards & Protocols</CardTitle>
             <CardDescription>
-              International standards and protocols followed in our research methodology
+              International standards and protocols followed in our research
+              methodology
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -142,9 +153,12 @@ export default function ReferencesPage() {
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                 <div>
-                  <p className="font-medium">ISO 19115:2003 - Geographic Information Metadata</p>
+                  <p className="font-medium">
+                    ISO 19115:2003 - Geographic Information Metadata
+                  </p>
                   <p className="text-sm text-muted-foreground">
-                    International standard for describing geographic information and services
+                    International standard for describing geographic information
+                    and services
                   </p>
                 </div>
               </div>
@@ -153,14 +167,17 @@ export default function ReferencesPage() {
                 <div>
                   <p className="font-medium">FAIR Data Principles</p>
                   <p className="text-sm text-muted-foreground">
-                    Findable, Accessible, Interoperable, and Reusable data management practices
+                    Findable, Accessible, Interoperable, and Reusable data
+                    management practices
                   </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
                 <div>
-                  <p className="font-medium">IUCN Red List Categories and Criteria</p>
+                  <p className="font-medium">
+                    IUCN Red List Categories and Criteria
+                  </p>
                   <p className="text-sm text-muted-foreground">
                     Global standard for assessing the extinction risk of species
                   </p>
@@ -171,7 +188,8 @@ export default function ReferencesPage() {
                 <div>
                   <p className="font-medium">Water Framework Directive (WFD)</p>
                   <p className="text-sm text-muted-foreground">
-                    European legislation for water quality assessment and management
+                    European legislation for water quality assessment and
+                    management
                   </p>
                 </div>
               </div>
@@ -210,5 +228,5 @@ export default function ReferencesPage() {
         </Card> */}
       </div>
     </div>
-  )
+  );
 }

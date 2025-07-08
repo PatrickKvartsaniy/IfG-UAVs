@@ -44,14 +44,6 @@ npm run dev
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-\`\`\`env
-NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token_here
-\`\`\`
-
 ## Deployment
 
 This project is automatically deployed to GitHub Pages using GitHub Actions.

@@ -1,8 +1,16 @@
-"use client"
+"use client";
 
-import { BarChart3, BookOpen, Map, Home, Users, FileText, Shield } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import {
+  BarChart3,
+  BookOpen,
+  Map,
+  Home,
+  Users,
+  FileText,
+  Shield,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -15,7 +23,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const mainMenuItems = [
   {
@@ -38,7 +46,7 @@ const mainMenuItems = [
     url: "/story-maps",
     icon: Map,
   },
-]
+];
 
 const bottomMenuItems = [
   {
@@ -51,10 +59,10 @@ const bottomMenuItems = [
     url: "/references",
     icon: FileText,
   },
-]
+];
 
 export function AppSidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <Sidebar>
@@ -63,7 +71,9 @@ export function AppSidebar() {
           <Shield className="h-6 w-6 text-green-600" />
           <div className="flex flex-col">
             <span className="text-sm font-semibold">UAV Study Platform</span>
-            <span className="text-xs text-muted-foreground">Protected Area Research</span>
+            <span className="text-xs text-muted-foreground">
+              Protected Area Research
+            </span>
           </div>
         </div>
       </SidebarHeader>
@@ -103,5 +113,5 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
