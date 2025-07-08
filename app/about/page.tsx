@@ -19,7 +19,7 @@ export default function AboutPage() {
         {/* Group Photo */}
         <div className="text-center">
           <img
-            src="/placeholder.svg?height=300&width=600"
+            src="/team.JPG?height=300&width=600"
             alt="UAV Study Research Team"
             className="mx-auto rounded-lg shadow-lg"
           />

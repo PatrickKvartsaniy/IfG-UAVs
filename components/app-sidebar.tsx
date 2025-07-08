@@ -1,6 +1,6 @@
 "use client"
 
-import { BarChart3, BookOpen, Map, Home, Users, FileText } from "lucide-react"
+import { BarChart3, BookOpen, Map, Home, Users, FileText, Shield } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -60,9 +60,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border">
         <div className="flex items-center gap-2 px-2 py-2">
-          <div className="h-6 w-6 bg-green-600 rounded flex items-center justify-center">
-            <span className="text-white text-xs font-bold">U</span>
-          </div>
+          <Shield className="h-6 w-6 text-green-600" />
           <div className="flex flex-col">
             <span className="text-sm font-semibold">UAV Study Platform</span>
             <span className="text-xs text-muted-foreground">Protected Area Research</span>

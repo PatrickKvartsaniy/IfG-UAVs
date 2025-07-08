@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { MapPin } from "lucide-react"
+import { MapPin, Thermometer, Droplets, Gauge } from "lucide-react"
 import dynamic from "next/dynamic"
 
 const LiveWeather = dynamic(() => import("@/components/LiveWeather"), {
@@ -28,38 +28,14 @@ interface MeasurementPoint {
   conductivity?: number
   flowVelocity?: number | string
   restored?: string
-}
-
-interface LeafletMapProps {
-  measurementPoints: MeasurementPoint[]
-  surveyImageUrl?: string
-  surveyBounds?: [[number, number], [number, number]]
-  height?: string
+  humidity?: number
+  soilMoisture?: number
 }
 
 const LeafletMap = dynamic(() => import("@/components/LeafletMap"), {
   ssr: false,
   loading: () => <div className="h-full bg-gray-100 animate-pulse rounded" />,
 })
-
-// Remove these unused arrays
-// const flightData = [
-//   { date: "Jan", flights: 12, coverage: 85 },
-//   { date: "Feb", flights: 15, coverage: 92 },
-//   { date: "Mar", flights: 18, coverage: 88 },
-//   { date: "Apr", flights: 22, coverage: 95 },
-//   { date: "May", flights: 25, coverage: 91 },
-//   { date: "Jun", flights: 28, coverage: 97 },
-// ];
-
-// const waterQualityData = [
-//   { time: "13:15", ph: 7.8, oxygen: 8.44, temp: 18.8 }, // Station 1
-//   { time: "13:37", ph: 8.0, oxygen: 8.55, temp: 18.4 }, // Station 2
-//   { time: "14:00", ph: 8.0, oxygen: 8.79, temp: 19.6 }, // Station 3
-//   { time: "14:18", ph: 7.9, oxygen: 8.41, temp: 18.6 }, // Station 6
-//   { time: "14:35", ph: 8.2, oxygen: 8.34, temp: 18.5 }, // Station 7
-//   { time: "14:55", ph: 8.2, oxygen: 8.3, temp: 18.8 }, // Station 8
-// ];
 
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState("")
@@ -77,18 +53,6 @@ export default function Dashboard() {
       console.warn("Global openStationPopup function is not available")
     }
   }
-
-  // State für Survey-Bild - direkt das komprimierte Bild laden
-  // const [surveyImageUrl] = useState<string>(
-  //   "/survey-data/compressed_survey_new.jpg",
-  // );
-
-  // ECHTE Koordinaten aus GeoTIFF (ETRS89 UTM 32N -> WGS84)
-  // Diese exakten Koordinaten haben ursprünglich funktioniert!
-  // const [surveyBounds] = useState<[[number, number], [number, number]]>([
-  //   [51.944211596013005, 7.571090165784341], // Southwest - EXAKTE ursprüngliche Koordinaten
-  //   [51.94641954070195, 7.5736040521594665], // Northeast - EXAKTE ursprüngliche Koordinaten
-  // ]);
 
   // Zeit nur im Client setzen (Hydration-Problem lösen)
   useEffect(() => {
@@ -622,7 +586,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="flex items-center gap-2 px-4 py-3 border-b">
+      <header className="flex items-center gap-2 px-4 py-3 border-b bg-white">
         <SidebarTrigger />
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold">UAV Protected Area Study - Dashboard</h1>
@@ -639,12 +603,7 @@ export default function Dashboard() {
             <Card className="h-[480px]">
               <CardContent className="p-0 h-[480px]">
                 {isClient ? (
-                  <LeafletMap
-                    measurementPoints={measurementPoints}
-                    // surveyImageUrl={surveyImageUrl}
-                    // surveyBounds={surveyBounds}
-                    height="100%"
-                  />
+                  <LeafletMap measurementPoints={measurementPoints} height="100%" />
                 ) : (
                   <div className="h-full bg-gray-100 animate-pulse rounded" />
                 )}
@@ -666,7 +625,7 @@ export default function Dashboard() {
                     onClick={() => setActiveDataset("water")}
                     className="text-xs px-2"
                   >
-                    Water
+                    Water Quality
                   </Button>
                   <Button
                     variant={activeDataset === "soil" ? "default" : "ghost"}
@@ -674,20 +633,22 @@ export default function Dashboard() {
                     onClick={() => setActiveDataset("soil")}
                     className="text-xs px-2"
                   >
-                    Soil
+                    Soil Analysis
                   </Button>
                 </div>
               </div>
             </div>
 
-            {/* LAWA Information Link */}
+            {/* Information Link */}
             <div className="text-center">
               <a
                 href="#"
                 className="text-xs text-gray-400 hover:text-gray-500 underline cursor-not-allowed"
                 onClick={(e) => e.preventDefault()}
               >
-                Further information about LAWA Reference values
+                {activeDataset === "water"
+                  ? "Further information about LAWA Reference values"
+                  : "Soil monitoring standards and guidelines"}
               </a>
             </div>
           </div>
@@ -701,7 +662,7 @@ export default function Dashboard() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
-                  SenseBox Stations
+                  Water Quality Stations
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -894,8 +855,6 @@ export default function Dashboard() {
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-red-600"></div>
                       </div>
                     </div>
-
-                    {/* LAWA range labels */}
                   </div>
                 </div>
               </CardContent>
@@ -969,8 +928,6 @@ export default function Dashboard() {
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-red-600"></div>
                       </div>
                     </div>
-
-                    {/* LAWA range labels */}
                   </div>
                 </div>
               </CardContent>
@@ -1013,120 +970,254 @@ export default function Dashboard() {
             </Card>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
-            {/* SenseBox Stations Widget */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  SenseBox Stations
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {/* Soil stations summary */}
-                  <div className="grid grid-cols-2 gap-2">
+          /* Soil Analysis View - Improved Layout */
+          <div className="space-y-6">
+            {/* Overview Cards Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Stations Overview */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    Soil Monitoring Stations
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {/* Soil stations summary */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-green-50 p-3 rounded border border-green-200">
+                        <div className="text-xs font-medium text-green-800">Restored Areas</div>
+                        <div className="text-2xl font-bold text-green-600">16</div>
+                        <div className="text-xs text-green-600">stations</div>
+                      </div>
+                      <div className="bg-orange-50 p-3 rounded border border-orange-200">
+                        <div className="text-xs font-medium text-orange-800">Non-Restored</div>
+                        <div className="text-2xl font-bold text-orange-600">15</div>
+                        <div className="text-xs text-orange-600">stations</div>
+                      </div>
+                    </div>
+
+                    {/* Station selection */}
+                    <div className="space-y-2">
+                      <div className="text-xs text-gray-600">Select Station:</div>
+                      <select
+                        className="w-full text-xs p-2 border rounded bg-white"
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            const stationId = Number.parseInt(e.target.value)
+                            handleStationSelection(stationId)
+                            e.target.value = "" // Reset selection
+                          }
+                        }}
+                      >
+                        <option value="">Choose station...</option>
+                        <optgroup label="Restored Areas (16)">
+                          {soilMeasurementPoints
+                            .filter((p) => p.restored === "y")
+                            .map((point) => (
+                              <option key={point.objectId} value={point.objectId}>
+                                Station {point.objectId}
+                              </option>
+                            ))}
+                        </optgroup>
+                        <optgroup label="Non-Restored Areas (15)">
+                          {soilMeasurementPoints
+                            .filter((p) => p.restored === "n")
+                            .map((point) => (
+                              <option key={point.objectId} value={point.objectId}>
+                                Station {point.objectId}
+                              </option>
+                            ))}
+                        </optgroup>
+                      </select>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Temperature Analysis */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Thermometer className="h-4 w-4" />
+                    Soil Temperature
+                  </CardTitle>
+                  <CardDescription className="text-xs">Average temperature comparison</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-600">Restored Areas:</span>
+                        <span className="font-bold text-green-600 text-lg">{stats.temperature?.restored}°C</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-600">Non-Restored:</span>
+                        <span className="font-bold text-orange-600 text-lg">{stats.temperature?.nonRestored}°C</span>
+                      </div>
+                    </div>
+
+                    {/* Temperature difference indicator */}
+                    <div className="bg-blue-50 p-2 rounded border border-blue-200">
+                      <div className="text-xs text-blue-800 font-medium">Temperature Difference</div>
+                      <div className="text-sm text-blue-600">
+                        {(
+                          Number.parseFloat(stats.temperature?.nonRestored || "0") -
+                          Number.parseFloat(stats.temperature?.restored || "0")
+                        ).toFixed(1)}
+                        °C warmer in non-restored areas
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Humidity Analysis */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Droplets className="h-4 w-4" />
+                    Soil Humidity
+                  </CardTitle>
+                  <CardDescription className="text-xs">Relative humidity levels</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-600">Restored Areas:</span>
+                        <span className="font-bold text-green-600 text-lg">{stats.humidity?.restored}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-600">Non-Restored:</span>
+                        <span className="font-bold text-blue-600 text-lg">{stats.humidity?.nonRestored}%</span>
+                      </div>
+                    </div>
+
+                    {/* Humidity difference indicator */}
                     <div className="bg-green-50 p-2 rounded border border-green-200">
-                      <div className="text-xs font-medium text-green-800">Restored</div>
-                      <div className="text-lg font-bold text-green-600">16</div>
+                      <div className="text-xs text-green-800 font-medium">Humidity Advantage</div>
+                      <div className="text-sm text-green-600">
+                        {(
+                          Number.parseFloat(stats.humidity?.restored || "0") -
+                          Number.parseFloat(stats.humidity?.nonRestored || "0")
+                        ).toFixed(1)}
+                        % higher in restored areas
+                      </div>
                     </div>
-                    <div className="bg-red-50 p-2 rounded border border-red-200">
-                      <div className="text-xs font-medium text-red-800">Non-Restored</div>
-                      <div className="text-lg font-bold text-red-600">15</div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Soil Moisture Analysis */}
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Gauge className="h-4 w-4" />
+                    Soil Moisture
+                  </CardTitle>
+                  <CardDescription className="text-xs">Moisture content levels</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-600">Restored Areas:</span>
+                        <span className="font-bold text-green-600 text-lg">{stats.soilMoisture?.restored}%</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-600">Non-Restored:</span>
+                        <span className="font-bold text-orange-600 text-lg">{stats.soilMoisture?.nonRestored}%</span>
+                      </div>
+                    </div>
+
+                    {/* Moisture difference indicator */}
+                    <div className="bg-gray-50 p-2 rounded border border-gray-200">
+                      <div className="text-xs text-gray-800 font-medium">Moisture Difference</div>
+                      <div className="text-sm text-gray-600">
+                        {Math.abs(
+                          Number.parseFloat(stats.soilMoisture?.restored || "0") -
+                            Number.parseFloat(stats.soilMoisture?.nonRestored || "0"),
+                        ).toFixed(2)}
+                        % variation
+                      </div>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
 
-                  {/* Compact station selection */}
-                  <div className="space-y-2">
-                    <div className="text-xs text-gray-600">Select Station:</div>
-                    <select
-                      className="w-full text-xs p-1 border rounded bg-white"
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          const stationId = Number.parseInt(e.target.value)
-                          handleStationSelection(stationId)
-                          e.target.value = "" // Reset selection
-                        }
-                      }}
-                    >
-                      <option value="">Choose station...</option>
-                      <optgroup label="Restored (16)">
-                        {soilMeasurementPoints
-                          .filter((p) => p.restored === "y")
-                          .map((point) => (
-                            <option key={point.objectId} value={point.objectId}>
-                              Station {point.objectId}
-                            </option>
-                          ))}
-                      </optgroup>
-                      <optgroup label="Non-Restored (15)">
-                        {soilMeasurementPoints
-                          .filter((p) => p.restored === "n")
-                          .map((point) => (
-                            <option key={point.objectId} value={point.objectId}>
-                              Station {point.objectId}
-                            </option>
-                          ))}
-                      </optgroup>
-                    </select>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Detailed Analysis Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Temperature Range Analysis */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Temperature Range Analysis</CardTitle>
+                  <CardDescription>Detailed temperature distribution across monitoring stations</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <div className="text-sm font-medium text-green-800 mb-2">Restored Areas</div>
+                        <div className="text-2xl font-bold text-green-600 mb-1">{stats.tempRange?.restored}</div>
+                        <div className="text-xs text-green-600">Temperature Range</div>
+                        <div className="text-sm text-green-700 mt-2">Average: {stats.temperature?.restored}°C</div>
+                      </div>
+                      <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                        <div className="text-sm font-medium text-orange-800 mb-2">Non-Restored Areas</div>
+                        <div className="text-2xl font-bold text-orange-600 mb-1">{stats.tempRange?.nonRestored}</div>
+                        <div className="text-xs text-orange-600">Temperature Range</div>
+                        <div className="text-sm text-orange-700 mt-2">Average: {stats.temperature?.nonRestored}°C</div>
+                      </div>
+                    </div>
 
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Soil Temperature</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-xs">Restored:</span>
-                    <span className="font-bold text-green-600">{stats.temperature?.restored}°C</span>
+                    <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                      <div className="text-sm font-medium text-blue-800">Key Findings</div>
+                      <div className="text-sm text-blue-700 mt-1">
+                        Restored areas show consistently lower temperatures, indicating better soil health and
+                        vegetation cover.
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs">Non-Restored:</span>
-                    <span className="font-bold text-orange-600">{stats.temperature?.nonRestored}°C</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Soil Humidity</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-xs">Restored:</span>
-                    <span className="font-bold text-green-600">{stats.humidity?.restored}%</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs">Non-Restored:</span>
-                    <span className="font-bold text-blue-600">{stats.humidity?.nonRestored}%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              {/* Humidity Range Analysis */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">Humidity Range Analysis</CardTitle>
+                  <CardDescription>Comprehensive humidity distribution patterns</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <div className="text-sm font-medium text-green-800 mb-2">Restored Areas</div>
+                        <div className="text-2xl font-bold text-green-600 mb-1">{stats.humidityRange?.restored}</div>
+                        <div className="text-xs text-green-600">Humidity Range</div>
+                        <div className="text-sm text-green-700 mt-2">Average: {stats.humidity?.restored}%</div>
+                      </div>
+                      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <div className="text-sm font-medium text-blue-800 mb-2">Non-Restored Areas</div>
+                        <div className="text-2xl font-bold text-blue-600 mb-1">{stats.humidityRange?.nonRestored}</div>
+                        <div className="text-xs text-blue-600">Humidity Range</div>
+                        <div className="text-sm text-blue-700 mt-2">Average: {stats.humidity?.nonRestored}%</div>
+                      </div>
+                    </div>
 
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm">Soil Moisture</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-xs">Restored:</span>
-                    <span className="font-bold text-green-600">{stats.soilMoisture?.restored}%</span>
+                    <div className="bg-green-50 p-3 rounded border border-green-200">
+                      <div className="text-sm font-medium text-green-800">Key Findings</div>
+                      <div className="text-sm text-green-700 mt-1">
+                        Restored areas maintain higher humidity levels, supporting better ecosystem recovery and
+                        biodiversity.
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs">Non-Restored:</span>
-                    <span className="font-bold text-orange-600">{stats.soilMoisture?.nonRestored}%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )}
       </div>
