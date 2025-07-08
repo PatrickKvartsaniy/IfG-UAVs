@@ -79,27 +79,6 @@ The static files will be generated in the `out` directory.
 3. Set source to "GitHub Actions"
 4. The workflow will handle the rest
 
-## Project Structure
-
-\`\`\`
-├── app/                    # Next.js App Router pages
-│   ├── dashboard/         # Dashboard page
-│   ├── wiki/             # Wildlife wiki page
-│   ├── story-maps/       # Story maps page
-│   ├── about/            # About page
-│   ├── references/       # References page
-│   └── landing/          # Landing page
-├── components/           # Reusable components
-│   ├── ui/              # shadcn/ui components
-│   ├── app-sidebar.tsx  # Main navigation sidebar
-│   ├── footer.tsx       # Footer component
-│   └── leaflet-map.tsx  # Leaflet map component
-├── .github/
-│   └── workflows/
-│       └── deploy.yml   # GitHub Actions deployment
-└── public/              # Static assets
-\`\`\`
-
 ## Contributing
 
 1. Fork the repository

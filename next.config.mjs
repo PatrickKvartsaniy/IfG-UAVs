@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+const repo = 'uav-study-web-app';
+const isGithubPages = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
   output: 'export',
   trailingSlash: true,
@@ -9,11 +12,10 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true
+    unoptimized: true,
   },
-  // Handle GitHub Pages subdirectory deployment
-  basePath: process.env.NODE_ENV === 'production' ? '/uav-study-web-app' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/uav-study-web-app/' : '',
-}
+  basePath: isGithubPages ? `/${repo}` : '',
+  assetPrefix: isGithubPages ? `/${repo}/` : '',
+};
 
-export default nextConfig
+export default nextConfig;
