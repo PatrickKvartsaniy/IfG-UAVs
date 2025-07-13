@@ -11,7 +11,7 @@ export type IconName = "Bird" | "TreePine" | "Fish" | "Flower"
 export interface Species {
   id: number
   name: string
-  category: "birds" | "mammals" | "fish" | "flora" | "unknown"
+  category: "birds" | "mammals" | "fish" | "flora"
   scientificName: string
   status: "Protected" | "Common"
   habitat: string
@@ -59,7 +59,6 @@ const categoryMap: Record<string, { category: Species["category"]; icon: IconNam
   Mammalia: { category: "mammals", icon: "TreePine" },
   Actinopterygii: { category: "fish", icon: "Fish" },
   Plantae: { category: "flora", icon: "Flower" },
-  default: { category: "unknown", icon: "TreePine" },
 }
 
 // ----------------------------------
@@ -81,6 +80,7 @@ export function loadWildlifeDataFromCSV(): Promise<Species[]> {
 
         const iconic = row.iconic_taxon_name
         const mapInfo = categoryMap[iconic] || categoryMap.default
+        if (!mapInfo) return
         const inaturalistId = row.url?.split("/").pop() || ""
 
         results.push({
