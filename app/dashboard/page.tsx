@@ -1179,7 +1179,7 @@ export default function Dashboard() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-600">
-                          Renaturated Areas:
+                          Renaturated:
                         </span>
                         <span className="font-bold text-green-600 text-lg">
                           {stats.temperature?.restored}°C
@@ -1230,7 +1230,7 @@ export default function Dashboard() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-600">
-                          Renaturated Areas:
+                          Renaturated:
                         </span>
                         <span className="font-bold text-green-600 text-lg">
                           {stats.humidity?.restored}%
