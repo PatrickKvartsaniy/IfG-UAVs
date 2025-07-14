@@ -19,10 +19,9 @@ const storyMaps = [
     description:
       "An immersive exploration of our study area, from source to delta, showcasing the diverse habitats and species discovered through UAV monitoring.",
     thumbnail: "/storymap.jpeg",
-    publishDate: "2024-01-15",
+    publishDate: "2025-07-15",
     author: "Research Team",
     tags: ["Ecosystem", "Biodiversity", "Conservation"],
-    views: 1247,
     arcGisUrl:
       "https://storymaps.arcgis.com/stories/c845e722bb0e456a8ba56d2ec1b95e8e",
   },
@@ -62,7 +61,7 @@ export default function StoryMapsPage() {
               <img
                 src={storyMaps[0].thumbnail}
                 alt="Featured story map"
-                className="w-full h-64 md:h-full object-cover"
+                className="w-full h-32 md:h-full object-cover"
               />
             </div>
             <div className="md:w-1/2 p-6">
@@ -75,10 +74,6 @@ export default function StoryMapsPage() {
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   {storyMaps[0].publishDate}
-                </div>
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  {storyMaps[0].views} views
                 </div>
               </div>
               <div className="flex gap-2 mb-4">

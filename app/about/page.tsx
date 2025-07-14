@@ -1,14 +1,8 @@
-"use client";
+"use client"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 export default function AboutPage() {
   return (
@@ -22,18 +16,6 @@ export default function AboutPage() {
       </header>
 
       <div className="flex-1 p-6 space-y-8">
-        {/* Group Photo */}
-        <div className="text-center">
-          <img
-            src="/team.JPG?height=300&width=600"
-            alt="UAV Study Research Team"
-            className="mx-auto rounded-lg shadow-lg"
-          />
-          <p className="text-sm text-muted-foreground mt-2">
-            UAV Study Research Team
-          </p>
-        </div>
-
         {/* Teams */}
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
@@ -42,6 +24,13 @@ export default function AboutPage() {
               <CardDescription>Data management and publication</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="mb-4">
+                <img
+                  src="/teams/dd.jpeg"
+                  alt="Data Dissemination Team"
+                  className="w-full h-92 object-cover rounded-lg"
+                />
+              </div>
               <ul className="space-y-2">
                 <li className="text-sm">• Petro Kvartsianyi</li>
                 <li className="text-sm">• Margaux Neri</li>
@@ -55,11 +44,16 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle>Image Analysis</CardTitle>
-              <CardDescription>
-                UAV imagery processing and analysis
-              </CardDescription>
+              <CardDescription>UAV imagery processing and analysis</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="mb-4">
+                <img
+                  src="/teams/ia.png"
+                  alt="Image Analysis Team"
+                  className="w-full h-92 object-cover rounded-lg"
+                />
+              </div>
               <ul className="space-y-2">
                 <li className="text-sm">• Lourenço Alexandre</li>
                 <li className="text-sm">• Muhammad Sanan</li>
@@ -76,11 +70,16 @@ export default function AboutPage() {
           <Card>
             <CardHeader>
               <CardTitle>Sensors</CardTitle>
-              <CardDescription>
-                Environmental monitoring equipment
-              </CardDescription>
+              <CardDescription>Environmental monitoring equipment</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="mb-4">
+                <img
+                  src="/teams/sensors.jpeg"
+                  alt="Sensors Team"
+                  className="w-full h-92 object-cover rounded-lg"
+                />
+              </div>
               <ul className="space-y-2">
                 <li className="text-sm">• Solenn Reeves-Long</li>
                 <li className="text-sm">• Samuel Costa Cabral</li>
@@ -96,6 +95,13 @@ export default function AboutPage() {
               <CardDescription>Coordination and administration</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="mb-4">
+                <img
+                  src="/teams/pm.png"
+                  alt="Project Management Team"
+                  className="w-full h-92 object-cover rounded-lg"
+                />
+              </div>
               <ul className="space-y-2">
                 <li className="text-sm">• Francisco Lozada</li>
                 <li className="text-sm">• Mario Galvao</li>
@@ -106,5 +112,5 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

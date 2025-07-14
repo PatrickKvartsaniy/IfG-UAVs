@@ -227,9 +227,9 @@ const LeafletMap = forwardRef<LeafletMapRef, LeafletMapProps>(
       markersRef.current.clear(); // Clear previous markers
       measurementPoints.forEach((point) => {
         // Color coding based on "restored" status
-        const iconColor = point.restored === "y" ? "#22c55e" : "#ef4444"; // Green for renaturated, Red for not renaturated
+        const iconColor = point.restored === "y" ? "#22c55e" : "#ef4444"; // Green for renatured, Red for not renatured
         const statusText =
-          point.restored === "y" ? "Renaturated" : "Non-renaturated";
+          point.restored === "y" ? "Renaturated" : "Non-renatured";
 
         const customIcon = L.divIcon({
           className: "custom-marker",

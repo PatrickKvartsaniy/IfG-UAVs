@@ -390,7 +390,7 @@ export default function LandingPage() {
                       <img
                         src="csm_1623743845_DAH_Logo_ifgi_long_2b4c356743.png"
                         alt="Institute for Geoinformatics"
-                        className="h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300"
+                        className="h-16 w-16 object-contain grayscale hover:grayscale-0 transition-all duration-300"
                       />
                       <p className="text-xs text-center text-muted-foreground">
                         Institut für Geoinformatik
@@ -401,7 +401,7 @@ export default function LandingPage() {
                       <img
                         src="1d3502d0963cebedbf37a0aedc81e093af096661-300x300.png"
                         alt="Master's Geotech"
-                        className="h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300"
+                        className="h-16 w-16 object-contain grayscale hover:grayscale-0 transition-all duration-300"
                       />
                       <p className="text-xs text-center text-muted-foreground">
                         Master's Geotech
