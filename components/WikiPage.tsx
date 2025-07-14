@@ -58,6 +58,7 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
 
   const handleSpeciesClick = (species: Species) => {
     setSelectedSpecies(species)
+    console.log("Selected species:", species)
   }
 
   const clearSelection = () => {
@@ -72,9 +73,8 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
       <div
         style={style}
         key={species.id}
-        className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
-          selectedSpecies?.id === species.id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
-        }`}
+        className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${selectedSpecies?.id === species.id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
+          }`}
         onClick={() => handleSpeciesClick(species)}
       >
         <div className="flex items-start justify-between">
@@ -102,7 +102,7 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen w-full bg-gray-50">
       <header className="flex items-center gap-2 px-6 py-4 bg-white border-b">
         <SidebarTrigger />
         <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
       </header>
 
       <div className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-none mx-auto">
           {/* Data Source Attribution */}
           <Card className="bg-blue-50 border-blue-200 mb-4">
             <CardContent className="p-4">
@@ -166,9 +166,9 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
             </CardContent>
           </Card>
 
-          <div className="grid xl:grid-cols-5 gap-6">
+          <div className="grid xl:grid-cols-3 gap-6">
             {/* Virtualized Species List */}
-            <div className="xl:col-span-2">
+            <div className="xl:col-span-1">
               <Card className="h-fit">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
@@ -204,8 +204,8 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
               </Card>
             </div>
 
-            {/* Map + Species Info */}
-            <div className="xl:col-span-3 space-y-6">
+            {/* Column 2: Map */}
+            <div>
               <Card>
                 <CardHeader>
                   <CardTitle>Location Map</CardTitle>
@@ -217,11 +217,17 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="h-[450px] w-full">
-                    <MapWithNoSSR selectedSpecies={selectedSpecies} allSpecies={wildlifeData} />
+                    <MapWithNoSSR
+                      selectedSpecies={selectedSpecies}
+                      allSpecies={wildlifeData}
+                    />
                   </div>
                 </CardContent>
               </Card>
+            </div>
 
+            {/* Column 3: Species Info */}
+            <div>
               {selectedSpecies && (
                 <Card>
                   <CardHeader>
@@ -251,7 +257,7 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            window.open(`https://www.inaturalist.org/taxa/${selectedSpecies.inaturalistId}`, "_blank")
+                            window.open(`${selectedSpecies.url}`, "_blank")
                           }
                           className="h-6 px-2 text-xs"
                         >
@@ -282,6 +288,24 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                           <p className="text-sm text-muted-foreground">{selectedSpecies.status}</p>
                         </div>
                       </div>
+
+                      {selectedSpecies.imageUrl && (
+                        <div className="mb-4">
+                          <div className="relative">
+                            <img
+                              src={selectedSpecies.imageUrl}
+                              alt={selectedSpecies.name}
+                              className="w-full h-48 object-cover rounded-lg shadow-sm"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                              📸 iNaturalist
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

@@ -11,6 +11,7 @@ export type IconName = "Bird" | "TreePine" | "Fish" | "Flower"
 export interface Species {
   id: number
   name: string
+  scientific_name: string
   category: "birds" | "mammals" | "fish" | "flora"
   scientificName: string
   status: "Protected" | "Common"
@@ -20,6 +21,8 @@ export interface Species {
   lastSeen: string
   icon: IconName
   inaturalistId: string
+  url?: string
+  imageUrl?: string
 }
 
 // ----------------------------------
@@ -82,10 +85,11 @@ export function loadWildlifeDataFromCSV(): Promise<Species[]> {
         const mapInfo = categoryMap[iconic] || categoryMap.default
         if (!mapInfo) return
         const inaturalistId = row.url?.split("/").pop() || ""
-
+        console.log("Processing row:", row)
         results.push({
           id: results.length + 1,
           name: row.common_name || row.species_guess || "Unknown",
+          scientific_name: row.scientific_name || "Unknown",
           category: mapInfo.category,
           scientificName: row.scientific_name,
           status: row.quality_grade === "research" ? "Protected" : "Common",
@@ -95,6 +99,8 @@ export function loadWildlifeDataFromCSV(): Promise<Species[]> {
           lastSeen: row.observed_on,
           icon: mapInfo.icon,
           inaturalistId,
+          url: row.url,
+          imageUrl: row.image_url || "",
         })
       })
       .on("end", () => resolve(results))

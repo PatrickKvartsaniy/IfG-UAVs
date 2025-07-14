@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SidebarProvider defaultOpen={true}>
-          <div className="min-h-screen flex">
+          <div className="min-h-screen flex w-full bg-gray-50">
             <AppSidebar />
             <div className="flex-1 flex flex-col">
               <main className="flex-1 overflow-auto">{children}</main>
