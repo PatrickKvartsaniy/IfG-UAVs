@@ -42,7 +42,7 @@ interface WikiPageProps {
   riverPolygon: GeoJSON.FeatureCollection;
 }
 
-const categories = ["all", "birds", "fish", "flora", "mammals"];
+const categories = ["all", "birds", "fish", "flora", "mammals", "others"];
 
 export default function WikiPage({ wildlifeData }: WikiPageProps) {
   const [searchTerm, setSearchTerm] = useState("");

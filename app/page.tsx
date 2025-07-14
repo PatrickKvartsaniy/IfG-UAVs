@@ -388,7 +388,7 @@ export default function LandingPage() {
                     {/* University Logos */}
                     <div className="flex flex-col items-center space-y-2">
                       <img
-                        src="csm_1623743845_DAH_Logo_ifgi_long_2b4c356743.png?height=80&width=120"
+                        src="csm_1623743845_DAH_Logo_ifgi_long_2b4c356743.png"
                         alt="Institute for Geoinformatics"
                         className="h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300"
                       />
@@ -399,7 +399,7 @@ export default function LandingPage() {
 
                     <div className="flex flex-col items-center space-y-2">
                       <img
-                        src="1d3502d0963cebedbf37a0aedc81e093af096661-300x300.png?height=80&width=120"
+                        src="1d3502d0963cebedbf37a0aedc81e093af096661-300x300.png"
                         alt="Master's Geotech"
                         className="h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300"
                       />

@@ -12,11 +12,11 @@ export interface Species {
   id: number;
   name: string;
   scientific_name: string;
-  category: "birds" | "mammals" | "fish" | "flora";
+  category: "birds" | "mammals" | "fish" | "flora" | "others";
   scientificName: string;
   status: "Protected" | "Common";
-  coordinates: { lat: number; lng: number }; // still used for first point
-  locations: { lat: number; lng: number }[]; // all sightings
+  coordinates: { lat: number; lng: number };
+  locations: { lat: number; lng: number }[];
   description: string;
   lastSeen: string;
   icon: IconName;
@@ -66,6 +66,7 @@ const categoryMap: Record<
   Mammalia: { category: "mammals", icon: "TreePine" },
   Actinopterygii: { category: "fish", icon: "Fish" },
   Plantae: { category: "flora", icon: "Flower" },
+  default: { category: "others", icon: "TreePine" },
 };
 
 // ----------------------------------
