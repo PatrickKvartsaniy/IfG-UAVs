@@ -1,19 +1,20 @@
-"use client"
+"use client";
 
-import { useMemo, useState } from "react"
-import { FixedSizeList as List } from "react-window"
-import { Species } from "@/data/data"
+import { useMemo, useState } from "react";
+import { FixedSizeList as List } from "react-window";
+import { Species } from "@/data/data";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ChevronLeft, ChevronRight } from "lucide-react"; // place at top with other imports
 import {
   Search,
   MapPin,
@@ -22,59 +23,71 @@ import {
   Fish,
   Flower,
   TreePine,
-} from "lucide-react"
-import dynamic from "next/dynamic"
+} from "lucide-react";
+import dynamic from "next/dynamic";
 
-const MapWithNoSSR = dynamic(() => import("@/components/WikiMap"), { ssr: false })
+const MapWithNoSSR = dynamic(() => import("@/components/WikiMap"), {
+  ssr: false,
+});
 
 const iconMap = {
   Bird,
   Fish,
   Flower,
   TreePine,
-}
+};
 
 interface WikiPageProps {
-  wildlifeData: Species[]
-  riverPolygon: GeoJSON.FeatureCollection
+  wildlifeData: Species[];
+  riverPolygon: GeoJSON.FeatureCollection;
 }
 
-const categories = ["all", "birds", "fish", "flora", "mammals"]
+const categories = ["all", "birds", "fish", "flora", "mammals"];
 
 export default function WikiPage({ wildlifeData }: WikiPageProps) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedSpecies, setSelectedSpecies] = useState<Species | null>(null)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedSpecies, setSelectedSpecies] = useState<Species | null>(null);
 
   const filteredData = useMemo(() => {
     return wildlifeData.filter((item) => {
       const matchesSearch =
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.scientificName.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = selectedCategory === "all" || item.category === selectedCategory
-      return matchesSearch && matchesCategory
-    })
-  }, [wildlifeData, searchTerm, selectedCategory])
+        item.scientificName.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "all" || item.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [wildlifeData, searchTerm, selectedCategory]);
 
   const handleSpeciesClick = (species: Species) => {
-    setSelectedSpecies(species)
-    console.log("Selected species:", species)
-  }
+    setSelectedSpecies(species);
+    console.log("Selected species:", species);
+  };
 
   const clearSelection = () => {
-    setSelectedSpecies(null)
-  }
+    setSelectedSpecies(null);
+  };
 
-  const Row = ({ index, style }: { index: number; style: React.CSSProperties }) => {
-    const species = filteredData[index]
-    const Icon = iconMap[species.icon as keyof typeof iconMap] || TreePine
+  const Row = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
+    const species = filteredData[index];
+    const Icon = iconMap[species.icon as keyof typeof iconMap] || TreePine;
 
     return (
       <div
         style={style}
         key={species.id}
-        className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${selectedSpecies?.id === species.id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
-          }`}
+        className={`p-4 border-b cursor-pointer hover:bg-gray-50 transition-colors ${
+          selectedSpecies?.id === species.id
+            ? "bg-blue-50 border-l-4 border-l-blue-500"
+            : ""
+        }`}
         onClick={() => handleSpeciesClick(species)}
       >
         <div className="flex items-start justify-between">
@@ -82,15 +95,17 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
             <Icon className="h-5 w-5 text-gray-600 flex-shrink-0" />
             <div className="min-w-0 flex-1">
               <h4 className="font-medium truncate">{species.name}</h4>
-              <p className="text-sm text-muted-foreground italic truncate">{species.scientificName}</p>
-              <p className="text-xs text-muted-foreground capitalize">{species.category}</p>
+              <p className="text-sm text-muted-foreground italic truncate">
+                {species.scientificName}
+              </p>
+              <p className="text-xs text-muted-foreground capitalize">
+                {species.category}
+              </p>
             </div>
           </div>
           <Badge
             variant={
-              species.status === "Protected"
-                ? "destructive"
-                : "secondary"
+              species.status === "Protected" ? "destructive" : "secondary"
             }
             className="text-xs ml-2 flex-shrink-0"
           >
@@ -98,8 +113,11 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
           </Badge>
         </div>
       </div>
-    )
-  }
+    );
+  };
+
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const maxPerPage = 3;
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-gray-50">
@@ -126,7 +144,9 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => window.open("https://www.inaturalist.org", "_blank")}
+                  onClick={() =>
+                    window.open("https://www.inaturalist.org", "_blank")
+                  }
                   className="text-blue-700 border-blue-300 hover:bg-blue-100"
                 >
                   <ExternalLink className="h-4 w-4 mr-2" />
@@ -153,7 +173,9 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                   {categories.map((category) => (
                     <Button
                       key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
+                      variant={
+                        selectedCategory === category ? "default" : "outline"
+                      }
                       size="sm"
                       onClick={() => setSelectedCategory(category)}
                       className="capitalize"
@@ -174,12 +196,18 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                   <CardTitle className="flex items-center justify-between">
                     <span>Species ({filteredData.length})</span>
                     {selectedSpecies && (
-                      <Button variant="ghost" size="sm" onClick={clearSelection}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={clearSelection}
+                      >
                         Clear
                       </Button>
                     )}
                   </CardTitle>
-                  <CardDescription>Click on a species to view on the map</CardDescription>
+                  <CardDescription>
+                    Click on a species to view on the map
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                   {filteredData.length > 0 ? (
@@ -233,8 +261,11 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-3">
                       {(() => {
-                        const Icon = iconMap[selectedSpecies.icon as keyof typeof iconMap] || TreePine
-                        return <Icon className="h-6 w-6" />
+                        const Icon =
+                          iconMap[
+                            selectedSpecies.icon as keyof typeof iconMap
+                          ] || TreePine;
+                        return <Icon className="h-6 w-6" />;
                       })()}
                       <div>
                         <div>{selectedSpecies.name}</div>
@@ -247,7 +278,13 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex gap-2 flex-wrap">
-                        <Badge variant={selectedSpecies.status === "Protected" ? "destructive" : "secondary"}>
+                        <Badge
+                          variant={
+                            selectedSpecies.status === "Protected"
+                              ? "destructive"
+                              : "secondary"
+                          }
+                        >
                           {selectedSpecies.status}
                         </Badge>
                         <Badge variant="outline" className="capitalize">
@@ -266,46 +303,113 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
                         </Button>
                       </div>
 
-                      <p className="text-sm leading-relaxed">{selectedSpecies.description}</p>
+                      <p className="text-sm leading-relaxed">
+                        {selectedSpecies.description}
+                      </p>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
                         <div>
-                          <h4 className="font-medium text-sm mb-1">Habitat</h4>
-                          <p className="text-sm text-muted-foreground">{selectedSpecies.habitat}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-sm mb-1">Last Observed</h4>
-                          <p className="text-sm text-muted-foreground">{selectedSpecies.lastSeen}</p>
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-sm mb-1">Coordinates</h4>
+                          <h4 className="font-medium text-sm mb-1">
+                            Scientific name
+                          </h4>
                           <p className="text-sm text-muted-foreground">
-                            {selectedSpecies.coordinates.lat.toFixed(4)}, {selectedSpecies.coordinates.lng.toFixed(4)}
+                            {selectedSpecies.scientificName}
                           </p>
                         </div>
                         <div>
-                          <h4 className="font-medium text-sm mb-1">Conservation Status</h4>
-                          <p className="text-sm text-muted-foreground">{selectedSpecies.status}</p>
+                          <h4 className="font-medium text-sm mb-1">
+                            Last Observed
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedSpecies.lastSeen}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">
+                            Coordinates
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedSpecies.coordinates.lat.toFixed(4)},{" "}
+                            {selectedSpecies.coordinates.lng.toFixed(4)}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm mb-1">
+                            Conservation Status
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedSpecies.status}
+                          </p>
                         </div>
                       </div>
 
-                      {selectedSpecies.imageUrl && (
-                        <div className="mb-4">
-                          <div className="relative">
-                            <img
-                              src={selectedSpecies.imageUrl}
-                              alt={selectedSpecies.name}
-                              className="w-full h-48 object-cover rounded-lg shadow-sm"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                            />
-                            <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                              📸 iNaturalist
+                      {selectedSpecies.galery &&
+                        selectedSpecies.galery.length > 0 && (
+                          <div className="mt-4">
+                            <h4 className="text-sm font-semibold mb-2">
+                              Gallery
+                            </h4>
+
+                            <div className="relative">
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                {selectedSpecies.galery
+                                  .slice(
+                                    galleryIndex,
+                                    galleryIndex + maxPerPage,
+                                  )
+                                  .map((url, index) => (
+                                    <img
+                                      key={index}
+                                      src={url}
+                                      alt={`${selectedSpecies.name} sighting ${galleryIndex + index + 1}`}
+                                      className="w-full h-32 object-cover rounded border"
+                                      onError={(e) => {
+                                        e.currentTarget.style.display = "none";
+                                      }}
+                                    />
+                                  ))}
+                              </div>
+
+                              {selectedSpecies.galery.length > maxPerPage && (
+                                <div className="flex justify-between mt-2">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={galleryIndex === 0}
+                                    onClick={() =>
+                                      setGalleryIndex(
+                                        Math.max(0, galleryIndex - maxPerPage),
+                                      )
+                                    }
+                                  >
+                                    <ChevronLeft className="w-4 h-4 mr-1" />
+                                    Prev
+                                  </Button>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={
+                                      galleryIndex + maxPerPage >=
+                                      selectedSpecies.galery.length
+                                    }
+                                    onClick={() =>
+                                      setGalleryIndex((prev) =>
+                                        Math.min(
+                                          prev + maxPerPage,
+                                          selectedSpecies.galery.length -
+                                            maxPerPage,
+                                        ),
+                                      )
+                                    }
+                                  >
+                                    Next
+                                    <ChevronRight className="w-4 h-4 ml-1" />
+                                  </Button>
+                                </div>
+                              )}
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                     </div>
                   </CardContent>
                 </Card>
@@ -315,5 +419,5 @@ export default function WikiPage({ wildlifeData }: WikiPageProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

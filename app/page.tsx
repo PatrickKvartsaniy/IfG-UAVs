@@ -1,9 +1,25 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ArrowRight, BarChart3, BookOpen, Map, Shield, Calendar, Euro, Droplets, Fish } from "lucide-react"
-import Link from "next/link"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  BarChart3,
+  BookOpen,
+  Map,
+  Shield,
+  Calendar,
+  Euro,
+  Droplets,
+  Fish,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -27,8 +43,8 @@ export default function LandingPage() {
                 <h1 className="text-6xl font-bold">UAV Study Platform</h1>
               </div>
               <p className="text-2xl mb-8 max-w-4xl">
-                Advanced environmental monitoring and research platform for protected river ecosystems using UAV
-                technology
+                Advanced environmental monitoring and research platform for
+                protected river ecosystems using UAV technology
               </p>
             </div>
           </div>
@@ -43,11 +59,14 @@ export default function LandingPage() {
                 <CardHeader>
                   <BarChart3 className="h-8 w-8 text-blue-600 mb-2" />
                   <CardTitle>Dashboard</CardTitle>
-                  <CardDescription>Real-time monitoring and analytics</CardDescription>
+                  <CardDescription>
+                    Real-time monitoring and analytics
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Comprehensive overview of UAV operations, species data, and environmental metrics.
+                    Comprehensive overview of UAV operations, species data, and
+                    environmental metrics.
                   </p>
                   <Link href="/dashboard">
                     <Button variant="outline" className="w-full bg-transparent">
@@ -62,11 +81,14 @@ export default function LandingPage() {
                 <CardHeader>
                   <BookOpen className="h-8 w-8 text-green-600 mb-2" />
                   <CardTitle>Wildlife Wiki</CardTitle>
-                  <CardDescription>Interactive species database</CardDescription>
+                  <CardDescription>
+                    Interactive species database
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Explore flora and fauna with interactive maps showing habitat locations.
+                    Explore flora and fauna with interactive maps showing
+                    habitat locations.
                   </p>
                   <Link href="/wiki">
                     <Button variant="outline" className="w-full bg-transparent">
@@ -84,7 +106,8 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Immersive stories combining maps, data, and multimedia content.
+                    Immersive stories combining maps, data, and multimedia
+                    content.
                   </p>
                   <Link href="/story-maps">
                     <Button variant="outline" className="w-full bg-transparent">
@@ -100,9 +123,12 @@ export default function LandingPage() {
             <div className="mb-16">
               <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
                 <CardHeader className="text-center">
-                  <CardTitle className="text-3xl text-blue-800">River Aa Renaturation Project</CardTitle>
+                  <CardTitle className="text-3xl text-blue-800">
+                    River Aa Renaturation Project
+                  </CardTitle>
                   <CardDescription className="text-lg text-blue-600">
-                    Restoring natural habitats and improving biodiversity along the protected river ecosystem
+                    Restoring natural habitats and improving biodiversity along
+                    the protected river ecosystem
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -118,16 +144,20 @@ export default function LandingPage() {
                           <div>
                             <p className="font-medium">Planning Phase (2011)</p>
                             <p className="text-muted-foreground">
-                              Initial concept and planning for restoration within the nature reserve
+                              Initial concept and planning for restoration
+                              within the nature reserve
                             </p>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                           <div>
-                            <p className="font-medium">Implementation (August 2012 - Summer 2014)</p>
+                            <p className="font-medium">
+                              Implementation (August 2012 - Summer 2014)
+                            </p>
                             <p className="text-muted-foreground">
-                              Main renaturation works completed over 2-year period
+                              Main renaturation works completed over 2-year
+                              period
                             </p>
                           </div>
                         </div>
@@ -136,7 +166,8 @@ export default function LandingPage() {
                           <div>
                             <p className="font-medium">Additional Sections</p>
                             <p className="text-muted-foreground">
-                              Westerholtsche Wiese (2018), Haus Coerde (2010), ongoing works since 2012
+                              Westerholtsche Wiese (2018), Haus Coerde (2010),
+                              ongoing works since 2012
                             </p>
                           </div>
                         </div>
@@ -150,17 +181,29 @@ export default function LandingPage() {
                       </h3>
                       <div className="bg-white rounded-lg p-4 border border-green-200">
                         <div className="text-center mb-4">
-                          <p className="text-3xl font-bold text-green-600">€1 Million</p>
-                          <p className="text-sm text-muted-foreground">Total Project Cost</p>
+                          <p className="text-3xl font-bold text-green-600">
+                            €1 Million
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Total Project Cost
+                          </p>
                         </div>
                         <div className="grid grid-cols-2 gap-4 text-sm">
                           <div className="text-center">
-                            <p className="text-2xl font-semibold text-blue-600">80%</p>
-                            <p className="text-muted-foreground">State of North Rhine-Westphalia</p>
+                            <p className="text-2xl font-semibold text-blue-600">
+                              80%
+                            </p>
+                            <p className="text-muted-foreground">
+                              State of North Rhine-Westphalia
+                            </p>
                           </div>
                           <div className="text-center">
-                            <p className="text-2xl font-semibold text-purple-600">20%</p>
-                            <p className="text-muted-foreground">City of Münster</p>
+                            <p className="text-2xl font-semibold text-purple-600">
+                              20%
+                            </p>
+                            <p className="text-muted-foreground">
+                              City of Münster
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -180,7 +223,8 @@ export default function LandingPage() {
                             <h4 className="font-medium">Water Quality</h4>
                           </div>
                           <p className="text-sm text-muted-foreground">
-                            Improvement of both River Aa and Aasee through re-establishing natural hydromorphology
+                            Improvement of both River Aa and Aasee through
+                            re-establishing natural hydromorphology
                           </p>
                         </CardContent>
                       </Card>
@@ -192,7 +236,8 @@ export default function LandingPage() {
                             <h4 className="font-medium">Flood Protection</h4>
                           </div>
                           <p className="text-sm text-muted-foreground">
-                            Enhanced protection through wider, more sinuous channel design reducing peak flows
+                            Enhanced protection through wider, more sinuous
+                            channel design reducing peak flows
                           </p>
                         </CardContent>
                       </Card>
@@ -201,10 +246,13 @@ export default function LandingPage() {
                         <CardContent className="p-4">
                           <div className="flex items-center gap-2 mb-2">
                             <Fish className="h-4 w-4 text-purple-500" />
-                            <h4 className="font-medium">Ecological Enhancement</h4>
+                            <h4 className="font-medium">
+                              Ecological Enhancement
+                            </h4>
                           </div>
                           <p className="text-sm text-muted-foreground">
-                            New riparian habitats with improved connectivity for flora and fauna
+                            New riparian habitats with improved connectivity for
+                            flora and fauna
                           </p>
                         </CardContent>
                       </Card>
@@ -212,25 +260,36 @@ export default function LandingPage() {
                   </div>
 
                   <div className="bg-white rounded-lg p-6 border border-gray-200">
-                    <h4 className="font-semibold mb-3">Key Implementation Features</h4>
+                    <h4 className="font-semibold mb-3">
+                      Key Implementation Features
+                    </h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
                       <li className="flex items-start gap-2">
                         <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-2"></div>
                         <span>
-                          Increased buffer zones between agricultural fields and riverbed to create natural barriers
+                          Increased buffer zones between agricultural fields and
+                          riverbed to create natural barriers
                         </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2"></div>
-                        <span>210-meter restoration section at Westerholtsche Wiese (completed 2018)</span>
+                        <span>
+                          210-meter restoration section at Westerholtsche Wiese
+                          (completed 2018)
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2"></div>
-                        <span>320-meter section near Haus Coerde (completed 2010)</span>
+                        <span>
+                          320-meter section near Haus Coerde (completed 2010)
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></div>
-                        <span>Ongoing works at Hülshoffstraße, A1 & inner-city areas since 2012</span>
+                        <span>
+                          Ongoing works at Hülshoffstraße, A1 & inner-city areas
+                          since 2012
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -242,8 +301,12 @@ export default function LandingPage() {
             <div className="grid gap-8 lg:grid-cols-2 mb-16">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Study Area Overview</CardTitle>
-                  <CardDescription>Protected river ecosystem in Central Europe</CardDescription>
+                  <CardTitle className="text-2xl">
+                    Study Area Overview
+                  </CardTitle>
+                  <CardDescription>
+                    Protected river ecosystem in Central Europe
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-2">
@@ -272,16 +335,21 @@ export default function LandingPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Key Achievements</CardTitle>
-                  <CardDescription>Research milestones and discoveries</CardDescription>
+                  <CardDescription>
+                    Research milestones and discoveries
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                       <div>
-                        <p className="font-medium">Comprehensive Species Catalog</p>
+                        <p className="font-medium">
+                          Comprehensive Species Catalog
+                        </p>
                         <p className="text-sm text-muted-foreground">
-                          Identified and documented 291 species across multiple taxonomic groups
+                          Identified and documented 291 species across multiple
+                          taxonomic groups
                         </p>
                       </div>
                     </div>
@@ -290,7 +358,8 @@ export default function LandingPage() {
                       <div>
                         <p className="font-medium">Advanced UAV Mapping</p>
                         <p className="text-sm text-muted-foreground">
-                          Achieved 97% area coverage with high-resolution aerial surveys
+                          Achieved 97% area coverage with high-resolution aerial
+                          surveys
                         </p>
                       </div>
                     </div>
@@ -299,7 +368,8 @@ export default function LandingPage() {
                       <div>
                         <p className="font-medium">Conservation Impact</p>
                         <p className="text-sm text-muted-foreground">
-                          Data-driven recommendations for habitat protection and restoration
+                          Data-driven recommendations for habitat protection and
+                          restoration
                         </p>
                       </div>
                     </div>
@@ -309,7 +379,9 @@ export default function LandingPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Research Institutions</CardTitle>
+                  <CardTitle className="text-2xl">
+                    Research Institutions
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
@@ -320,7 +392,9 @@ export default function LandingPage() {
                         alt="Institute for Geoinformatics"
                         className="h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300"
                       />
-                      <p className="text-xs text-center text-muted-foreground">Institut für Geoinformatik</p>
+                      <p className="text-xs text-center text-muted-foreground">
+                        Institut für Geoinformatik
+                      </p>
                     </div>
 
                     <div className="flex flex-col items-center space-y-2">
@@ -329,7 +403,9 @@ export default function LandingPage() {
                         alt="Master's Geotech"
                         className="h-16 w-auto grayscale hover:grayscale-0 transition-all duration-300"
                       />
-                      <p className="text-xs text-center text-muted-foreground">Master's Geotech</p>
+                      <p className="text-xs text-center text-muted-foreground">
+                        Master's Geotech
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -342,7 +418,8 @@ export default function LandingPage() {
                 <CardContent className="py-12">
                   <h2 className="text-3xl font-bold mb-4">Start Exploring</h2>
                   <p className="text-xl mb-8 opacity-90">
-                    Discover the rich biodiversity of our protected river ecosystem
+                    Discover the rich biodiversity of our protected river
+                    ecosystem
                   </p>
                   <div className="flex gap-4 justify-center">
                     <Link href="/dashboard">
@@ -369,5 +446,5 @@ export default function LandingPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

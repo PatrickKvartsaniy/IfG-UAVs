@@ -739,62 +739,66 @@ export default function Dashboard() {
                   Water Quality
                 </CardTitle>
               </CardHeader>
-              <CardContent>                  <div className="space-y-3">
-                    {/* Water stations summary */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="bg-green-50 p-3 rounded border border-green-200">
-                        <div className="text-xs font-medium text-green-800">
-                          Renaturated
-                        </div>
-                        <div className="text-2xl font-bold text-green-600">3</div>
-                        <div className="text-xs text-green-600">measurements</div>
+              <CardContent>
+                {" "}
+                <div className="space-y-3">
+                  {/* Water stations summary */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-green-50 p-3 rounded border border-green-200">
+                      <div className="text-xs font-medium text-green-800">
+                        Renaturated
                       </div>
-                      <div className="bg-orange-50 p-3 rounded border border-orange-200">
-                        <div className="text-xs font-medium text-orange-800">
-                          Non-renaturated
-                        </div>
-                        <div className="text-2xl font-bold text-orange-600">3</div>
-                        <div className="text-xs text-orange-600">measurements</div>
-                      </div>
+                      <div className="text-2xl font-bold text-green-600">3</div>
+                      <div className="text-xs text-green-600">measurements</div>
                     </div>
-
-                    {/* Station selection */}
-                    <div className="space-y-2">
-                      <div className="text-xs text-gray-600">
-                        Select Station:
+                    <div className="bg-orange-50 p-3 rounded border border-orange-200">
+                      <div className="text-xs font-medium text-orange-800">
+                        Non-renaturated
                       </div>
-                      <select
-                        className="w-full text-xs p-2 border rounded bg-white"
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            const stationId = Number.parseInt(e.target.value);
-                            handleStationSelection(stationId);
-                            e.target.value = ""; // Reset selection
-                          }
-                        }}
-                      >
-                        <option value="">Choose station...</option>
-                        <optgroup label="Renaturated (3)">
-                          {waterMeasurementPoints
-                            .filter((p) => p.restored === "y")
-                            .map((point) => (
-                              <option key={point.objectId} value={point.objectId}>
-                                Station {point.objectId}
-                              </option>
-                            ))}
-                        </optgroup>
-                        <optgroup label="Non-renaturated (3)">
-                          {waterMeasurementPoints
-                            .filter((p) => p.restored === "n")
-                            .map((point) => (
-                              <option key={point.objectId} value={point.objectId}>
-                                Station {point.objectId}
-                              </option>
-                            ))}
-                        </optgroup>
-                      </select>
+                      <div className="text-2xl font-bold text-orange-600">
+                        3
+                      </div>
+                      <div className="text-xs text-orange-600">
+                        measurements
+                      </div>
                     </div>
                   </div>
+
+                  {/* Station selection */}
+                  <div className="space-y-2">
+                    <div className="text-xs text-gray-600">Select Station:</div>
+                    <select
+                      className="w-full text-xs p-2 border rounded bg-white"
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          const stationId = Number.parseInt(e.target.value);
+                          handleStationSelection(stationId);
+                          e.target.value = ""; // Reset selection
+                        }
+                      }}
+                    >
+                      <option value="">Choose station...</option>
+                      <optgroup label="Renaturated (3)">
+                        {waterMeasurementPoints
+                          .filter((p) => p.restored === "y")
+                          .map((point) => (
+                            <option key={point.objectId} value={point.objectId}>
+                              Station {point.objectId}
+                            </option>
+                          ))}
+                      </optgroup>
+                      <optgroup label="Non-renaturated (3)">
+                        {waterMeasurementPoints
+                          .filter((p) => p.restored === "n")
+                          .map((point) => (
+                            <option key={point.objectId} value={point.objectId}>
+                              Station {point.objectId}
+                            </option>
+                          ))}
+                      </optgroup>
+                    </select>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -1096,7 +1100,9 @@ export default function Dashboard() {
                         <div className="text-2xl font-bold text-green-600">
                           16
                         </div>
-                        <div className="text-xs text-green-600">measurements</div>
+                        <div className="text-xs text-green-600">
+                          measurements
+                        </div>
                       </div>
                       <div className="bg-orange-50 p-3 rounded border border-orange-200">
                         <div className="text-xs font-medium text-orange-800">
@@ -1105,7 +1111,9 @@ export default function Dashboard() {
                         <div className="text-2xl font-bold text-orange-600">
                           14
                         </div>
-                        <div className="text-xs text-orange-600">measurements</div>
+                        <div className="text-xs text-orange-600">
+                          measurements
+                        </div>
                       </div>
                     </div>
 
@@ -1433,7 +1441,9 @@ export default function Dashboard() {
           <div className="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-y-auto shadow-xl relative z-[10000]">
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">What is LAWA?</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  What is LAWA?
+                </h2>
                 <button
                   onClick={() => setShowLawaInfo(false)}
                   className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
@@ -1441,36 +1451,70 @@ export default function Dashboard() {
                   ×
                 </button>
               </div>
-              
+
               <div className="space-y-6 text-gray-700">
                 <p className="text-base leading-relaxed">
-                  <strong>LAWA</strong> stands for the <em>Bund/Länder-Arbeitsgemeinschaft Wasser</em>, or German Working Group on Water Issues of the Federal States and the Federal Government. It is a national coordination body that develops strategies, guidance, and standards for water management across Germany. LAWA plays a central role in implementing European and national water protection policies in a harmonized way across the German federal states.
+                  <strong>LAWA</strong> stands for the{" "}
+                  <em>Bund/Länder-Arbeitsgemeinschaft Wasser</em>, or German
+                  Working Group on Water Issues of the Federal States and the
+                  Federal Government. It is a national coordination body that
+                  develops strategies, guidance, and standards for water
+                  management across Germany. LAWA plays a central role in
+                  implementing European and national water protection policies
+                  in a harmonized way across the German federal states.
                 </p>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">The Role and Significance of LAWA Standards</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    The Role and Significance of LAWA Standards
+                  </h3>
                   <p className="text-base leading-relaxed mb-4">
-                    LAWA standards aim to ensure consistent, science-based, and legally compliant monitoring and assessment of surface waters in Germany, especially in the context of the EU Water Framework Directive (WFD) (Directive 2000/60/EC). The WFD sets goals for achieving and maintaining a "good status" for all European waters.
+                    LAWA standards aim to ensure consistent, science-based, and
+                    legally compliant monitoring and assessment of surface
+                    waters in Germany, especially in the context of the EU Water
+                    Framework Directive (WFD) (Directive 2000/60/EC). The WFD
+                    sets goals for achieving and maintaining a "good status" for
+                    all European waters.
                   </p>
-                  
+
                   <p className="text-base leading-relaxed mb-4">
-                    LAWA develops and publishes frameworks (such as the "Rahmenkonzeption Monitoring und Bewertung von Oberflächengewässern") that:
+                    LAWA develops and publishes frameworks (such as the
+                    "Rahmenkonzeption Monitoring und Bewertung von
+                    Oberflächengewässern") that:
                   </p>
-                  
+
                   <ul className="list-disc list-inside space-y-2 mb-4 ml-4">
-                    <li>Define technical and procedural standards for water monitoring programs.</li>
-                    <li>Ensure national consistency in how ecological and chemical water status is evaluated.</li>
-                    <li>Support EU reporting requirements, allowing Germany to present unified positions and fulfill legal obligations.</li>
-                    <li>Integrate additional environmental and legal directives (e.g. Nitrates Directive, Habitats Directive).</li>
+                    <li>
+                      Define technical and procedural standards for water
+                      monitoring programs.
+                    </li>
+                    <li>
+                      Ensure national consistency in how ecological and chemical
+                      water status is evaluated.
+                    </li>
+                    <li>
+                      Support EU reporting requirements, allowing Germany to
+                      present unified positions and fulfill legal obligations.
+                    </li>
+                    <li>
+                      Integrate additional environmental and legal directives
+                      (e.g. Nitrates Directive, Habitats Directive).
+                    </li>
                   </ul>
-                  
+
                   <p className="text-base leading-relaxed">
-                    These frameworks are developed through collaboration between federal and state experts and adapted based on updates to laws, monitoring needs, and EU agreements. The documents are regularly updated to reflect new scientific knowledge, legal changes, and international coordination results.
+                    These frameworks are developed through collaboration between
+                    federal and state experts and adapted based on updates to
+                    laws, monitoring needs, and EU agreements. The documents are
+                    regularly updated to reflect new scientific knowledge, legal
+                    changes, and international coordination results.
                   </p>
                 </div>
 
                 <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h4 className="text-lg font-semibold text-blue-900 mb-2">Reference Guidelines</h4>
+                  <h4 className="text-lg font-semibold text-blue-900 mb-2">
+                    Reference Guidelines
+                  </h4>
                   <p className="text-sm text-blue-800 mb-3">
                     You can find the referenced guidelines here:
                   </p>
@@ -1480,11 +1524,12 @@ export default function Dashboard() {
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800 underline text-sm break-all"
                   >
-                    LAWA Rahmenkonzeption Monitoring und Bewertung von Oberflächengewässern (PDF)
+                    LAWA Rahmenkonzeption Monitoring und Bewertung von
+                    Oberflächengewässern (PDF)
                   </a>
                 </div>
               </div>
-              
+
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowLawaInfo(false)}

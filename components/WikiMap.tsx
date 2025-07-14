@@ -30,14 +30,16 @@ export default function WikiMap({ selectedSpecies, allSpecies }: MapProps) {
 
   // Helper function to validate coordinates
   const isValidCoordinate = (coord: any): coord is number[] => {
-    return Array.isArray(coord) && 
-           coord.length === 2 && 
-           typeof coord[0] === 'number' && 
-           typeof coord[1] === 'number' &&
-           !isNaN(coord[0]) && 
-           !isNaN(coord[1]) &&
-           isFinite(coord[0]) && 
-           isFinite(coord[1]);
+    return (
+      Array.isArray(coord) &&
+      coord.length === 2 &&
+      typeof coord[0] === "number" &&
+      typeof coord[1] === "number" &&
+      !isNaN(coord[0]) &&
+      !isNaN(coord[1]) &&
+      isFinite(coord[0]) &&
+      isFinite(coord[1])
+    );
   };
 
   useEffect(() => {
@@ -78,7 +80,7 @@ export default function WikiMap({ selectedSpecies, allSpecies }: MapProps) {
         {
           attribution: "© Esri © OpenStreetMap contributors",
           maxZoom: 18,
-        }
+        },
       ).addTo(map.current);
 
       setIsLoaded(true);
@@ -109,106 +111,81 @@ export default function WikiMap({ selectedSpecies, allSpecies }: MapProps) {
     markersRef.current = [];
 
     if (
-      selectedSpecies?.coordinates?.lat != null &&
-      selectedSpecies?.coordinates?.lng != null &&
-      typeof selectedSpecies.coordinates.lat === 'number' &&
-      typeof selectedSpecies.coordinates.lng === 'number' &&
-      !isNaN(selectedSpecies.coordinates.lat) &&
-      !isNaN(selectedSpecies.coordinates.lng)
+      selectedSpecies?.locations &&
+      Array.isArray(selectedSpecies.locations) &&
+      selectedSpecies.locations.length > 0
     ) {
-      const marker = L.circleMarker(
-        [selectedSpecies.coordinates.lat, selectedSpecies.coordinates.lng],
-        {
-          color: "white",
-          fillColor: getCategoryColor(selectedSpecies.category),
-          fillOpacity: 0.8,
-          radius: 12,
-          weight: 3,
-        }
-      ).addTo(map.current);
+      // Plot all sightings
+      const bounds: [number, number][] = [];
 
-      const popupContent = `
-        <div style="font-family: system-ui; padding: 4px;">
-          <h3 style="margin: 0 0 4px 0; font-weight: bold; font-size: 14px;">${selectedSpecies.name}</h3>
-          <p style="margin: 0; font-style: italic; color: #666; font-size: 12px;">${selectedSpecies.scientificName}</p>
-          <p style="margin: 4px 0 0 0; font-size: 11px;">${selectedSpecies.habitat}</p>
-          <p style="margin: 4px 0 0 0; font-size: 11px; color: #666;">Status: ${selectedSpecies.status}</p>
+      selectedSpecies.locations.forEach(({ lat, lng }) => {
+        if (
+          typeof lat === "number" &&
+          typeof lng === "number" &&
+          !isNaN(lat) &&
+          !isNaN(lng)
+        ) {
+          const marker = L.circleMarker([lat, lng], {
+            color: "white",
+            fillColor: getCategoryColor(selectedSpecies.category),
+            fillOpacity: 0.8,
+            radius: 10,
+            weight: 2,
+          }).addTo(map.current);
+
+          marker.bindPopup(`
+        <div style="font-family: system-ui; font-size: 12px;">
+          <strong>${selectedSpecies.name}</strong><br/>
+          <em>${selectedSpecies.scientificName}</em>
         </div>
-      `;
+      `);
 
-      marker.bindPopup(popupContent).openPopup();
-      markersRef.current.push(marker);
+          markersRef.current.push(marker);
+          bounds.push([lat, lng]);
+        }
+      });
 
-      // Only create polygon if we have valid polygon data (at least 3 points)
+      // Fly to bounds if multiple points exist
+      if (bounds.length > 1) {
+        map.current.fitBounds(bounds);
+      } else {
+        map.current.setView(bounds[0], 16);
+      }
+
+      // Add optional polygon if valid
       if (
         Array.isArray(selectedSpecies.polygon) &&
         selectedSpecies.polygon.length >= 3 &&
         selectedSpecies.polygon.every(
-          (coord: number[]) => Array.isArray(coord) && 
-                              coord.length === 2 && 
-                              typeof coord[0] === 'number' && 
-                              typeof coord[1] === 'number' &&
-                              !isNaN(coord[0]) && 
-                              !isNaN(coord[1])
+          (coord: number[]) =>
+            Array.isArray(coord) &&
+            coord.length === 2 &&
+            coord.every((v) => typeof v === "number" && isFinite(v)),
         )
       ) {
         try {
           const polygon = L.polygon(
-            selectedSpecies.polygon.map((coord: number[]) => [coord[1], coord[0]]),
+            selectedSpecies.polygon.map((coord: number[]) => [
+              coord[1],
+              coord[0],
+            ]),
             {
               color: getCategoryColor(selectedSpecies.category),
               fillColor: getCategoryColor(selectedSpecies.category),
               fillOpacity: 0.3,
               weight: 2,
-            }
+            },
           ).addTo(map.current);
 
           markersRef.current.push(polygon);
         } catch (error) {
-          console.warn("Failed to create polygon for species:", selectedSpecies.name, error);
+          console.warn(
+            "Failed to create polygon for species:",
+            selectedSpecies.name,
+            error,
+          );
         }
       }
-
-      map.current.setView(
-        [selectedSpecies.coordinates.lat, selectedSpecies.coordinates.lng],
-        16
-      );
-    } else {
-      allSpecies.forEach((species) => {
-        if (
-          species?.coordinates?.lat != null &&
-          species?.coordinates?.lng != null &&
-          typeof species.coordinates.lat === 'number' &&
-          typeof species.coordinates.lng === 'number' &&
-          !isNaN(species.coordinates.lat) &&
-          !isNaN(species.coordinates.lng)
-        ) {
-          const marker = L.circleMarker(
-            [species.coordinates.lat, species.coordinates.lng],
-            {
-              color: "white",
-              fillColor: getCategoryColor(species.category),
-              fillOpacity: 0.7,
-              radius: 6,
-              weight: 2,
-            }
-          ).addTo(map.current);
-
-          const popupContent = `
-            <div style="font-family: system-ui; padding: 4px;">
-              <h4 style="margin: 0 0 2px 0; font-size: 13px; font-weight: bold;">${species.name}</h4>
-              <p style="margin: 0; font-size: 11px; color: #666; text-transform: capitalize;">${species.category}</p>
-            </div>
-          `;
-
-          marker.bindPopup(popupContent);
-          markersRef.current.push(marker);
-        } else {
-          console.warn("Skipping species with invalid coordinates:", species);
-        }
-      });
-
-      map.current.setView([51.987, 7.626], 14);
     }
   }, [selectedSpecies, allSpecies, isLoaded]);
 

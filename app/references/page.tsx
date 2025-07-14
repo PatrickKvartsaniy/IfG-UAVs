@@ -43,7 +43,7 @@ const tools = [
     version: "3.2",
     url: "https://www.esri.com/en-us/arcgis/products/arcgis-pro",
   },
-    {
+  {
     name: "ArcGIS Online",
     description:
       "Geographic Information System for cloud-based spatial analysis and mapping",
@@ -75,7 +75,7 @@ const tools = [
   {
     name: "Leaflet",
     description: "JavaScript library for interactive maps",
-  }
+  },
 ];
 
 export default function ReferencesPage() {
@@ -193,12 +193,16 @@ export default function ReferencesPage() {
                   </p>
                 </div>
               </div>
-                <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3">
                 <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
                 <div>
-                  <p className="font-medium">LAWA (Länderarbeitsgemeinschaft Wasser)</p>
+                  <p className="font-medium">
+                    LAWA (Länderarbeitsgemeinschaft Wasser)
+                  </p>
                   <p className="text-sm text-muted-foreground">
-                    RaKon Teil B – Arbeitspapier II: Hintergrund- und Orientierungswerte für physikalisch-chemische Qualitätskomponenten in Fließgewässern.
+                    RaKon Teil B – Arbeitspapier II: Hintergrund- und
+                    Orientierungswerte für physikalisch-chemische
+                    Qualitätskomponenten in Fließgewässern.
                   </p>
                 </div>
               </div>
