@@ -74,7 +74,7 @@ export default function Dashboard() {
 
   // REAL measurement data from Excel table - WATER (Ordered from South to North)
   const waterMeasurementPoints = [
-    // Station 1 (southernmost) - Renaturated
+    // Station 1 (southernmost) - Renatured
     {
       lat: 51.94405765,
       lon: 7.573433435,
@@ -88,9 +88,9 @@ export default function Dashboard() {
       flowVelocity: 22.68,
       restored: "y",
       name: "Water Station 1",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 2 - Renaturated
+    // Station 2 - Renatured
     {
       lat: 51.94476251,
       lon: 7.573200841,
@@ -104,9 +104,9 @@ export default function Dashboard() {
       flowVelocity: 9.1,
       restored: "y",
       name: "Water Station 2",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 3 - Renaturated
+    // Station 3 - Renatured
     {
       lat: 51.94504219,
       lon: 7.572768064,
@@ -120,7 +120,7 @@ export default function Dashboard() {
       flowVelocity: 5.6,
       restored: "y",
       name: "Water Station 3",
-      type: "Renaturated",
+      type: "Renatured",
     },
     // Station 4 - Non-renatured
     {
@@ -174,7 +174,7 @@ export default function Dashboard() {
 
   // SOIL measurement data from Excel table - Ordered from South to North (lat 51.9415 to 51.9469)
   const soilMeasurementPoints = [
-    // Station 1 (southernmost) - Renaturated
+    // Station 1 (southernmost) - Renatured
     {
       lat: 51.9414862,
       lon: 7.5764494,
@@ -184,9 +184,9 @@ export default function Dashboard() {
       soilMoisture: 12.1,
       restored: "y",
       name: "Soil Station 1",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 2 - Renaturated
+    // Station 2 - Renatured
     {
       lat: 51.9415407,
       lon: 7.5767333,
@@ -196,9 +196,9 @@ export default function Dashboard() {
       soilMoisture: 11.6,
       restored: "y",
       name: "Soil Station 2",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 3 - Renaturated
+    // Station 3 - Renatured
     {
       lat: 51.9415959,
       lon: 7.5767742,
@@ -208,9 +208,9 @@ export default function Dashboard() {
       soilMoisture: 12.03,
       restored: "y",
       name: "Soil Station 3",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 4 - Renaturated
+    // Station 4 - Renatured
     {
       lat: 51.941743,
       lon: 7.5764706,
@@ -220,9 +220,9 @@ export default function Dashboard() {
       soilMoisture: 12.19,
       restored: "y",
       name: "Soil Station 4",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 5 - Renaturated
+    // Station 5 - Renatured
     {
       lat: 51.9421082,
       lon: 7.5756079,
@@ -232,9 +232,9 @@ export default function Dashboard() {
       soilMoisture: 11.87,
       restored: "y",
       name: "Soil Station 5",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 6 - Renaturated
+    // Station 6 - Renatured
     {
       lat: 51.9423608,
       lon: 7.5757084,
@@ -244,9 +244,9 @@ export default function Dashboard() {
       soilMoisture: 11.71,
       restored: "y",
       name: "Soil Station 6",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 7 - Renaturated
+    // Station 7 - Renatured
     {
       lat: 51.9427036,
       lon: 7.5750969,
@@ -256,9 +256,9 @@ export default function Dashboard() {
       soilMoisture: 11.79,
       restored: "y",
       name: "Soil Station 7",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 8 - Renaturated
+    // Station 8 - Renatured
     {
       lat: 51.9431885,
       lon: 7.5750439,
@@ -268,9 +268,9 @@ export default function Dashboard() {
       soilMoisture: 11.67,
       restored: "y",
       name: "Soil Station 8",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 9 - Renaturated
+    // Station 9 - Renatured
     {
       lat: 51.943661,
       lon: 7.5749714,
@@ -280,9 +280,9 @@ export default function Dashboard() {
       soilMoisture: 11.53,
       restored: "y",
       name: "Soil Station 9",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 10 - Renaturated
+    // Station 10 - Renatured
     {
       lat: 51.9436947,
       lon: 7.5738278,
@@ -292,9 +292,9 @@ export default function Dashboard() {
       soilMoisture: 11.68,
       restored: "y",
       name: "Soil Station 10",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 11 - Renaturated
+    // Station 11 - Renatured
     {
       lat: 51.9437077,
       lon: 7.5742544,
@@ -304,9 +304,9 @@ export default function Dashboard() {
       soilMoisture: 12.03,
       restored: "y",
       name: "Soil Station 11",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 12 - Renaturated
+    // Station 12 - Renatured
     {
       lat: 51.9441371,
       lon: 7.5733219,
@@ -316,9 +316,9 @@ export default function Dashboard() {
       soilMoisture: 12.03,
       restored: "y",
       name: "Soil Station 12",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 13 - Renaturated
+    // Station 13 - Renatured
     {
       lat: 51.944236,
       lon: 7.5728354,
@@ -328,9 +328,9 @@ export default function Dashboard() {
       soilMoisture: 12.4,
       restored: "y",
       name: "Soil Station 13",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 14 - Renaturated
+    // Station 14 - Renatured
     {
       lat: 51.9445077,
       lon: 7.5729556,
@@ -340,9 +340,9 @@ export default function Dashboard() {
       soilMoisture: 12.31,
       restored: "y",
       name: "Soil Station 14",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 15 - Renaturated
+    // Station 15 - Renatured
     {
       lat: 51.9448183,
       lon: 7.5731248,
@@ -352,9 +352,9 @@ export default function Dashboard() {
       soilMoisture: 12.14,
       restored: "y",
       name: "Soil Station 15",
-      type: "Renaturated",
+      type: "Renatured",
     },
-    // Station 16 - Renaturated
+    // Station 16 - Renatured
     {
       lat: 51.9451206,
       lon: 7.5725664,
@@ -364,7 +364,7 @@ export default function Dashboard() {
       soilMoisture: 12.22,
       restored: "y",
       name: "Soil Station 16",
-      type: "Renaturated",
+      type: "Renatured",
     },
     // Station 17 - Non-renatured
     {
@@ -746,7 +746,7 @@ export default function Dashboard() {
                   <div className="grid grid-cols-2 gap-2">
                     <div className="bg-green-50 p-3 rounded border border-green-200">
                       <div className="text-xs font-medium text-green-800">
-                        Renaturated
+                        Renatured
                       </div>
                       <div className="text-2xl font-bold text-green-600">3</div>
                       <div className="text-xs text-green-600">measurements</div>
@@ -778,7 +778,7 @@ export default function Dashboard() {
                       }}
                     >
                       <option value="">Choose station...</option>
-                      <optgroup label="Renaturated (3)">
+                      <optgroup label="Renatured (3)">
                         {waterMeasurementPoints
                           .filter((p) => p.restored === "y")
                           .map((point) => (
@@ -812,7 +812,7 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-xs">Renaturated:</span>
+                    <span className="text-xs">Renatured:</span>
                     <span className="font-bold text-green-600">
                       {stats.oxygen?.restored} mg/L
                     </span>
@@ -853,7 +853,7 @@ export default function Dashboard() {
                         style={{ left: `${((9 - 7) / 3) * 100}%` }}
                       ></div>
 
-                      {/* Green marker for Renaturated */}
+                      {/* Green marker for Renatured */}
                       <div
                         className="absolute top-0 bottom-0 w-0.5 bg-green-600 z-10"
                         style={{
@@ -864,7 +864,7 @@ export default function Dashboard() {
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-green-600"></div>
                       </div>
 
-                      {/* Red marker for Non-Renaturated */}
+                      {/* Red marker for Non-Renatured */}
                       <div
                         className="absolute top-0 bottom-0 w-0.5 bg-red-600 z-10"
                         style={{
@@ -890,7 +890,7 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-xs">Renaturated:</span>
+                    <span className="text-xs">Renatured:</span>
                     <span className="font-bold text-green-600">
                       {stats.temperature?.restored}°C
                     </span>
@@ -930,7 +930,7 @@ export default function Dashboard() {
                         ></div>
                       ))}
 
-                      {/* Green marker - Renaturated */}
+                      {/* Green marker - Renatured */}
                       <div
                         className="absolute top-0 bottom-0 w-0.5 bg-green-600 z-10"
                         style={{
@@ -941,7 +941,7 @@ export default function Dashboard() {
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-green-600"></div>
                       </div>
 
-                      {/* Red marker - Non-Renaturated */}
+                      {/* Red marker - Non-Renatured */}
                       <div
                         className="absolute top-0 bottom-0 w-0.5 bg-red-600 z-10"
                         style={{
@@ -968,7 +968,7 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-xs">Renaturated:</span>
+                    <span className="text-xs">Renatured:</span>
                     <span className="font-bold text-green-600">
                       {stats.pH?.restored}
                     </span>
@@ -1009,7 +1009,7 @@ export default function Dashboard() {
                         style={{ left: `${((8.0 - 6.5) / 2.5) * 100}%` }}
                       ></div>
 
-                      {/* Green marker - Renaturated */}
+                      {/* Green marker - Renatured */}
                       <div
                         className="absolute top-0 bottom-0 w-0.5 bg-green-600 z-10"
                         style={{
@@ -1020,7 +1020,7 @@ export default function Dashboard() {
                         <div className="absolute -bottom-2 left-0 w-0.5 h-2 bg-green-600"></div>
                       </div>
 
-                      {/* Red marker - Non-Renaturated */}
+                      {/* Red marker - Non-Renatured */}
                       <div
                         className="absolute top-0 bottom-0 w-0.5 bg-red-600 z-10"
                         style={{
@@ -1043,7 +1043,7 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-xs">Renaturated:</span>
+                    <span className="text-xs">Renatured:</span>
                     <span className="font-bold text-green-600">
                       {stats.conductivity?.restored} μS/cm
                     </span>
@@ -1065,7 +1065,7 @@ export default function Dashboard() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-xs">Renaturated:</span>
+                    <span className="text-xs">Renatured:</span>
                     <span className="font-bold text-green-600">12.5 m/s</span>
                   </div>
                   <div className="flex justify-between">
@@ -1095,7 +1095,7 @@ export default function Dashboard() {
                     <div className="grid grid-cols-2 gap-2">
                       <div className="bg-green-50 p-3 rounded border border-green-200">
                         <div className="text-xs font-medium text-green-800">
-                          Renaturated
+                          Renatured
                         </div>
                         <div className="text-2xl font-bold text-green-600">
                           16
@@ -1133,7 +1133,7 @@ export default function Dashboard() {
                         }}
                       >
                         <option value="">Choose station...</option>
-                        <optgroup label="Renaturated (16)">
+                        <optgroup label="Renatured (16)">
                           {soilMeasurementPoints
                             .filter((p) => p.restored === "y")
                             .map((point) => (
@@ -1179,7 +1179,7 @@ export default function Dashboard() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-600">
-                          Renaturated:
+                          Renatured:
                         </span>
                         <span className="font-bold text-green-600 text-lg">
                           {stats.temperature?.restored}°C
@@ -1230,7 +1230,7 @@ export default function Dashboard() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-600">
-                          Renaturated:
+                          Renatured:
                         </span>
                         <span className="font-bold text-green-600 text-lg">
                           {stats.humidity?.restored}%
@@ -1279,7 +1279,7 @@ export default function Dashboard() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-600">
-                          Renaturated:
+                          Renatured:
                         </span>
                         <span className="font-bold text-green-600 text-lg">
                           {stats.soilMoisture?.restored}%
@@ -1334,7 +1334,7 @@ export default function Dashboard() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="text-sm font-medium text-green-800 mb-2">
-                          Renaturated Areas
+                          Renatured Areas
                         </div>
                         <div className="text-2xl font-bold text-green-600 mb-1">
                           {stats.tempRange?.restored}
@@ -1367,7 +1367,7 @@ export default function Dashboard() {
                         Key Findings
                       </div>
                       <div className="text-sm text-blue-700 mt-1">
-                        Renaturated areas show consistently lower temperatures,
+                        Renatured areas show consistently lower temperatures,
                         indicating better soil health and vegetation cover.
                       </div>
                     </div>
@@ -1390,7 +1390,7 @@ export default function Dashboard() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                         <div className="text-sm font-medium text-green-800 mb-2">
-                          Renaturated Areas
+                          Renatured Areas
                         </div>
                         <div className="text-2xl font-bold text-green-600 mb-1">
                           {stats.humidityRange?.restored}
@@ -1423,7 +1423,7 @@ export default function Dashboard() {
                         Key Findings
                       </div>
                       <div className="text-sm text-green-700 mt-1">
-                        Renaturated areas maintain higher humidity levels,
+                        Renatured areas maintain higher humidity levels,
                         supporting better ecosystem recovery and biodiversity.
                       </div>
                     </div>
