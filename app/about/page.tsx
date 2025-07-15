@@ -97,7 +97,7 @@ export default function AboutPage() {
             <CardContent>
               <div className="mb-4">
                 <img
-                  src="/teams/pm.png"
+                  src="/teams/pm.jpeg"
                   alt="Project Management Team"
                   className="w-full h-92 object-cover rounded-lg"
                 />

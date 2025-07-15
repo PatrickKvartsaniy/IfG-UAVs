@@ -299,7 +299,7 @@ export default function LandingPage() {
 
             {/* Study Information */}
             <div className="grid gap-8 lg:grid-cols-2 mb-16">
-              <Card>
+              {/* <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">
                     Study Area Overview
@@ -330,8 +330,8 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
-
+              </Card> */}
+{/* 
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">Key Achievements</CardTitle>
@@ -375,12 +375,12 @@ export default function LandingPage() {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
+              </Card> */}
 
               <Card>
                 <CardHeader>
                   <CardTitle className="text-2xl">
-                    Research Institutions
+                    Research Organisations
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
